@@ -1,0 +1,4 @@
+rootProject.name = 'key-center'
+include 'key-toolkit'
+include 'key-mgr'
+
