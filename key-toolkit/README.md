@@ -43,12 +43,14 @@ key-toolkit用于私钥生成、私钥格式转换、私钥分片保管、签名
 通过git下载源码：
 
 ```
-git clone https://gitee.com/aaronchu/key-center
+git clone https://github.com/WeBankBlockchain/key-center.git
 ```
 
 进入目录：
 ```
 cd key-center
+git checkout dev
+git pull
 cd key-toolkit
 ```
 
