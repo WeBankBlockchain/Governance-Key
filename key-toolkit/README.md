@@ -49,6 +49,8 @@ git clone https://github.com/WeBankBlockchain/key-center.git
 进入目录：
 ```
 cd key-center
+git checkout dev
+git pull
 cd key-toolkit
 ```
 
