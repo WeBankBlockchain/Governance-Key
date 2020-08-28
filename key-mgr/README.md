@@ -23,7 +23,7 @@ key-mgr用于私钥托管，适合B2B2C场景。
 通过git下载源码：
 
 ```
-git clone https://gitee.com/aaronchu/key-center
+git clone https://github.com/WeBankBlockchain/key-center.git
 ```
 
 进入目录：
