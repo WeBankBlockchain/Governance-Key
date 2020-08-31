@@ -1,4 +1,4 @@
-package com.webank.keymgr.config;
+package com.webank.keymgr.config.enc;
 
 import com.webank.keygen.key.KeyBytesConverter;
 import com.webank.keygen.key.KeyEncryptAlgorithm;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.webank.keymgr.config;
+package com.webank.keymgr.config.ecc;
 
 import com.webank.keygen.face.PrivateKeyCreator;
 import com.webank.keygen.key.KeyComputeAlgorithm;
