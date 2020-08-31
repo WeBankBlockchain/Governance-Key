@@ -1,4 +1,4 @@
-package com.webank.keymgr.config;
+package com.webank.keymgr.config.ecc;
 
 import com.webank.keygen.face.PrivateKeyCreator;
 import com.webank.keygen.key.KeyComputeAlgorithm;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.webank.keymgr.config;
+package com.webank.keymgr.config.db;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,7 +23,6 @@ import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -33,28 +32,28 @@ import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.util.Map;
 
-
 /**
- * EncryptKeyJpaConfig
+ * 
+ * KeyPwdJpaConfig
  *
- * @Description: EncryptKeyJpaConfig
+ * @Description: KeyPwdJpaConfig
  * @author graysonzhang
- * @date 2020-01-02 20:00:17
+ * @data 2019-07-26 21:54:06
  *
  */
-@ConditionalOnExpression("'${system.mgrStyle:file}'.equals('db')")
 @Configuration
-@DependsOn("transactionManager")
 @EnableJpaRepositories(
-        basePackages = "com.webank.keymgr.db.encryptkey.repository",
-        entityManagerFactoryRef = "encryptKeyEntityManagerFactory", 
+        basePackages = "com.webank.keymgr.db.keypwd.repository",
+        entityManagerFactoryRef = "keyPwdEntityManagerFactory",
         transactionManagerRef = "transactionManager")
-public class EncryptKeyJpaConfig {
+@DependsOn("transactionManager")
+@ConditionalOnExpression("${system.storePwd:false}")
+public class KeyPwdJpaConfig {
     
     @Autowired
-    @Qualifier("encryptKeyDataSource")
-    private DataSource encryptKeyDataSource;
-
+    @Qualifier("keyPwdDataSource")
+    private DataSource keyPwdDataSource;
+    
     @Autowired
     private JpaProperties jpaProperties; 
     
@@ -62,28 +61,25 @@ public class EncryptKeyJpaConfig {
         return jpaProperties.getProperties();
     }
     
-    @Bean(name = "encryptKeyEntityManager")
-    @Primary
-    public EntityManager keystoreEntityManager(EntityManagerFactoryBuilder builder) {
-        return keystoreEntityManagerFactory(builder).getObject().createEntityManager();
+    @Bean(name = "keyPwdEntityManager")
+    public EntityManager keyPwdEntityManager(EntityManagerFactoryBuilder builder) {
+        return keyPwdEntityManagerFactory(builder).getObject().createEntityManager();
     }
 
-    @Primary
-    @Bean(name = "encryptKeyEntityManagerFactory")
+    @Bean(name = "keyPwdEntityManagerFactory")
     @DependsOn("transactionManager")
-    public LocalContainerEntityManagerFactoryBean keystoreEntityManagerFactory(EntityManagerFactoryBuilder builder) {
-            
+    public LocalContainerEntityManagerFactoryBean keyPwdEntityManagerFactory(EntityManagerFactoryBuilder builder) {
+        
         jpaProperties.getProperties().put("hibernate.transaction.jta.platform", AtomikosJtaPlatform.class.getName());
         jpaProperties.getProperties().put("javax.persistence.transactionType", "JTA");
         
-        return builder.dataSource(encryptKeyDataSource).properties(getVendorProperties())
-                .packages("com.webank.keymgr.db.encryptkey.entity").persistenceUnit("encryptKeyPersistenceUnit").build();
+        return builder.dataSource(keyPwdDataSource).properties(getVendorProperties())
+                .packages("com.webank.keymgr.db.keypwd.entity").persistenceUnit("keyPwdPersistenceUnit").build();
     }
-
-    @Primary
-    @Bean(name = "encryptKeyTransactionManager")
-    public PlatformTransactionManager keyStoreTransactionManager(EntityManagerFactoryBuilder builder) {
-        return new JpaTransactionManager(keystoreEntityManagerFactory(builder).getObject());
+    
+    @Bean(name = "keyPwdTransactionManager")
+    public PlatformTransactionManager keyPwdTransactionManager(EntityManagerFactoryBuilder builder) {
+        return new JpaTransactionManager(keyPwdEntityManagerFactory(builder).getObject());
     }
 
 }

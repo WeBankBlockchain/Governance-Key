@@ -16,7 +16,7 @@
 package com.webank.keymgr.db.dao;
 
 
-import com.webank.keymgr.config.KeyPwdJpaConfig;
+import com.webank.keymgr.config.db.KeyPwdJpaConfig;
 import com.webank.keymgr.db.keypwd.entity.KeyPwdInfo;
 import com.webank.keymgr.db.keypwd.repository.KeyPwdInfoRepository;
 import com.webank.keymgr.enums.MgrExceptionCodeEnums;
