@@ -16,7 +16,7 @@
 package com.webank.keymgr.db.keypwd.repository;
 
 
-import com.webank.keymgr.config.KeyPwdJpaConfig;
+import com.webank.keymgr.config.db.KeyPwdJpaConfig;
 import com.webank.keymgr.db.keypwd.entity.KeyPwdInfo;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.data.jpa.repository.JpaRepository;

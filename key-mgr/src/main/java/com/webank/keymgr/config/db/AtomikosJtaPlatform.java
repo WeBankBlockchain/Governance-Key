@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.webank.keymgr.config;
+package com.webank.keymgr.config.db;
 
 import org.hibernate.engine.transaction.jta.platform.internal.AbstractJtaPlatform;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.context.annotation.Conditional;
 
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
@@ -29,7 +30,7 @@ import javax.transaction.UserTransaction;
  * @data 2019-07-28 14:13:38
  *
  */
-@ConditionalOnExpression("'${system.mgrStyle:file}'.equals('db')")
+@ConditionalOnExpression("'db'.equals('${system.mgrStyle}')")
 public class AtomikosJtaPlatform extends AbstractJtaPlatform {
 
     /** @Fields serialVersionUID : TODO */

@@ -15,7 +15,7 @@
  */
 package com.webank.keymgr.db.encryptkey.repository;
 
-import com.webank.keymgr.config.EncryptKeyJpaConfig;
+import com.webank.keymgr.config.db.EncryptKeyJpaConfig;
 import com.webank.keymgr.db.encryptkey.entity.EncryptKeyDO;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.data.jpa.repository.JpaRepository;

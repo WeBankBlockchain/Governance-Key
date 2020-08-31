@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.webank.keymgr.config;
+package com.webank.keymgr.config.db;
 
 import com.mysql.cj.jdbc.MysqlXADataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,10 +21,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.*;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -37,7 +34,7 @@ import java.sql.SQLException;
  * @date 2020-01-02 19:59:57
  *
  */
-@ConditionalOnExpression("'${system.mgrStyle:file}'.equals('db')")
+@ConditionalOnExpression("'db'.equals('${system.mgrStyle}')")
 @Configuration
 @DependsOn("transactionManager")
 public class EncryptKeyDataSourceConfig {

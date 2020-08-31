@@ -1,5 +1,6 @@
-package com.webank.keymgr.config;
+package com.webank.keymgr.config.db;
 
+import com.webank.keymgr.config.SystemConfig;
 import com.webank.keymgr.db.DatabasePersistenceService;
 import com.webank.keymgr.file.FilePersistenceService;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package com.webank.keymgr.db;
 
-import com.webank.keymgr.config.EncryptKeyJpaConfig;
+import com.webank.keymgr.config.db.EncryptKeyJpaConfig;
 import com.webank.keymgr.config.SystemConfig;
 import com.webank.keymgr.db.dao.EncryptKeyInfoDAO;
 import com.webank.keymgr.db.dao.KeyPwdInfoDAO;
