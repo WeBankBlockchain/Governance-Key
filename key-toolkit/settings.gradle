@@ -8,3 +8,5 @@
  */
 
 rootProject.name = 'key-toolkit'
+include ":key-mini-toolkit"
+project(':key-mini-toolkit').projectDir = new File('../key-mini-toolkit')
