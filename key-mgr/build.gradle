@@ -65,7 +65,6 @@ dependencies {
     compile 'mysql:mysql-connector-java'
 
     provided project(":key-toolkit")
-
 }
 
 sourceSets {
@@ -83,10 +82,10 @@ jar {
     enabled = true
     destinationDir file('dist')
     archiveName project.name + '.jar'
+    from configurations.provided.files.collect { it.getName().contains("key-toolkit")?zipTree(it):null}
     exclude '**/*.xml'
     exclude '**/*.properties'
     exclude '**/*.yml'
-    from configurations.provided.files.collect { it.getName().contains("key-toolkit")?zipTree(it):null}
     doLast {
         copy {
             from file('src/main/resources/')
