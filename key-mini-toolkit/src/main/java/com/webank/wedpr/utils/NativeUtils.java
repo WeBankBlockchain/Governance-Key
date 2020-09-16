@@ -34,15 +34,16 @@ public class NativeUtils {
         }
         String fileName = deduceFileName(resourcePath);
         File tmpFile = new File(ffiDir, fileName);
-        try (InputStream input = classLoader.getResourceAsStream(resourcePath);) {
-            if (input == null) {
-                throw new IOException("Resource not found:" + resourcePath + " for classloader " + classLoader.toString());
+        if(!tmpFile.exists()){
+            try (InputStream input = classLoader.getResourceAsStream(resourcePath);) {
+                if (input == null) {
+                    throw new IOException("Resource not found:" + resourcePath + " for classloader " + classLoader.toString());
+                }
+                Files.copy(input, tmpFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
-            Files.copy(input, tmpFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
+
         System.load(tmpFile.getAbsolutePath());
-        ffiDir.deleteOnExit();
-        tmpFile.deleteOnExit();
     }
 
     private static String deduceFileName(String path){
