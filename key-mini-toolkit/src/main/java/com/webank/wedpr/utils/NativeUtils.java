@@ -27,21 +27,20 @@ public class NativeUtils {
             throw new IOException("user dir unavailable");
         }
         File ffiDir = new File(tmpDir, "nativeutils");
-        if(!ffiDir.exists() || !ffiDir.isDirectory()){
-            if(!ffiDir.mkdir()){
+        if (!ffiDir.exists() || !ffiDir.isDirectory()) {
+            if (!ffiDir.mkdir()) {
                 throw new IOException("failed to create temp folder");
             }
         }
         String fileName = deduceFileName(resourcePath);
         File tmpFile = new File(ffiDir, fileName);
-        if(!tmpFile.exists()){
-            try (InputStream input = classLoader.getResourceAsStream(resourcePath);) {
-                if (input == null) {
-                    throw new IOException("Resource not found:" + resourcePath + " for classloader " + classLoader.toString());
-                }
-                Files.copy(input, tmpFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        try (InputStream input = classLoader.getResourceAsStream(resourcePath);) {
+            if (input == null) {
+                throw new IOException("Resource not found:" + resourcePath + " for classloader " + classLoader.toString());
             }
+            Files.copy(input, tmpFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
+
 
         System.load(tmpFile.getAbsolutePath());
     }
