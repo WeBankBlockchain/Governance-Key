@@ -30,6 +30,7 @@ public class NativeInterface {
     public static native CryptoResult secp256k1verify(String pubKeyHex, String message, String signature);
     public static native CryptoResult secp256k1keyPair();
     public static native CryptoResult sm2Sign(String priKeyHex, String message);
+    public static native CryptoResult sm2SignWithPub(String priKeyHex, String pubKeyHex,String message);
     public static native CryptoResult sm2verify(String pubKeyHex, String message, String signature);
     public static native CryptoResult sm2keyPair();
     public static native CryptoResult keccak256(String messageHex);
