@@ -26,9 +26,10 @@ public class NativeUtils {
         if (!tmpDir.exists() || !tmpDir.isDirectory()) {
             throw new IOException("user dir unavailable");
         }
-        File ffiDir = new File(tmpDir, "nativeutils");
+        File ffiDir = new File(new File(tmpDir, "fisco"), "nativeutils");
+
         if (!ffiDir.exists() || !ffiDir.isDirectory()) {
-            if (!ffiDir.mkdir()) {
+            if (!ffiDir.mkdirs()) {
                 throw new IOException("failed to create temp folder");
             }
         }
