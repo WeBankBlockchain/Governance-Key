@@ -26,9 +26,10 @@ public class NativeUtils {
         if (!tmpDir.exists() || !tmpDir.isDirectory()) {
             throw new IOException("user dir unavailable");
         }
-        File ffiDir = new File(tmpDir, "nativeutils");
-        if(!ffiDir.exists() || !ffiDir.isDirectory()){
-            if(!ffiDir.mkdir()){
+        File ffiDir = new File(new File(tmpDir, "fisco"), "nativeutils");
+
+        if (!ffiDir.exists() || !ffiDir.isDirectory()) {
+            if (!ffiDir.mkdirs()) {
                 throw new IOException("failed to create temp folder");
             }
         }
@@ -40,9 +41,9 @@ public class NativeUtils {
             }
             Files.copy(input, tmpFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
+
+
         System.load(tmpFile.getAbsolutePath());
-        ffiDir.deleteOnExit();
-        tmpFile.deleteOnExit();
     }
 
     private static String deduceFileName(String path){
