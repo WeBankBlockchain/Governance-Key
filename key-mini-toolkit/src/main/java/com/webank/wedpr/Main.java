@@ -19,6 +19,13 @@ public class Main {
             message = "847adcf9b24cf0041ddff02ffe324e30b1271c5170086f8ee799dd1123dacb2e";
             CryptoResult result =  NativeInterface.secp256k1verify(keyPair.publicKey, message, Signature.signature);
             System.out.println("result = " + result.result);
+
+        }
+        {
+            CryptoResult keyPair = NativeInterface.sm2keyPair();
+            String message = "847adcf9b24cf0041ddff02ffe324e30b1271c5170086f8ee799dd1123dacb2e";
+            CryptoResult signature = NativeInterface.sm2SignWithPub(keyPair.privteKey, keyPair.publicKey, message);
+            System.out.println(signature.signature);
         }
 //
 //        {
