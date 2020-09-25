@@ -26,7 +26,7 @@ public class NativeUtils {
         if (!tmpDir.exists() || !tmpDir.isDirectory()) {
             throw new IOException("user dir unavailable");
         }
-        File ffiDir = new File(new File(tmpDir, "fisco"), "nativeutils");
+        File ffiDir = new File(new File(tmpDir, ".fisco"), "nativeutils");
 
         if (!ffiDir.exists() || !ffiDir.isDirectory()) {
             if (!ffiDir.mkdirs()) {

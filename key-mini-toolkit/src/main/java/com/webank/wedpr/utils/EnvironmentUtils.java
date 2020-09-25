@@ -15,7 +15,8 @@ public class EnvironmentUtils {
         if(osName.contains("windows")) return ".dll";
         if(osName.contains("linux")) {
             String osArch = System.getProperty("os.arch").toLowerCase();
-            if(osArch.startsWith("arm")){
+            System.out.println("os.arch:"+osArch);
+            if("aarch64".equals(osArch)){
                 return "_arm.so";
             }
             return ".so";
