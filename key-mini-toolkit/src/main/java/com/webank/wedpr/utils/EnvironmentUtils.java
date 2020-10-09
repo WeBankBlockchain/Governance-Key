@@ -13,7 +13,14 @@ public class EnvironmentUtils {
         }
         osName = osName.toLowerCase();
         if(osName.contains("windows")) return ".dll";
-        if(osName.contains("linux")) return ".so";
+        if(osName.contains("linux")) {
+            String osArch = System.getProperty("os.arch").toLowerCase();
+            System.out.println("os.arch:"+osArch);
+            if("aarch64".equals(osArch)){
+                return "_arm.so";
+            }
+            return ".so";
+        }
         if(osName.contains("mac")) return ".dylib";
         throw new IllegalArgumentException("does not support os :"+osName);
     }
