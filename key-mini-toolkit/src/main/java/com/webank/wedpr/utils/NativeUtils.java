@@ -35,7 +35,7 @@ public class NativeUtils {
                 throw new IOException("failed to create temp folder");
             }
         }
-        ffiDir.deleteOnExit();
+
         String fileName = deduceFileName(resourcePath);
         File tmpFile = new File(ffiDir, fileName);
 
