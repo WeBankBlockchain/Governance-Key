@@ -9,7 +9,7 @@ import com.webank.wedpr.crypto.NativeInterface;
  * @data 2020/07/15
  */
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
         {
 
             CryptoResult keyPair =  NativeInterface.secp256k1keyPair();
