@@ -2,6 +2,8 @@
 apply plugin: 'maven'
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'signing'
+archivesBaseName = 'key-mini-toolkit'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -34,6 +36,30 @@ sourceSets {
     }
 }
 
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives javadocJar
+}
+signing {
+    required { gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
 jar {
     destinationDir file('dist')
     archiveName project.name + '.jar'
@@ -60,6 +86,50 @@ jar {
     }
 }
 
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.project {
+                name project.name
+                packaging 'jar'
+                description 'WeBank key mini toolkit'
+                url 'https://github.com/WeBankBlockchain/key-center'
+
+				scm {
+					url 'https://github.com/WeBankBlockchain/key-center.git'
+					connection 'https://github.com/WeBankBlockchain/key-center.git'
+				}
+
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'aaron'
+                        name 'aaron'
+                        email 'aaronchu@webank.com'
+                    }
+                }
+            }
+        }
+    }
+}
 clean {
     delete 'dist'
     delete 'build'
