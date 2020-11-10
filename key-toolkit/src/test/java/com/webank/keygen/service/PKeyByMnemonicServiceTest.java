@@ -42,7 +42,7 @@ public class PKeyByMnemonicServiceTest extends BaseTest {
 	@Test
 	public void testCreateMnemonic(){
 	    String mnemonicStr = service.createMnemonic(null);
-	    log.info("mnemonic str : {}", mnemonicStr);
+	    System.out.println( mnemonicStr);
 	}
 
 	@Test

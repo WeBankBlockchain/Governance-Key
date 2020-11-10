@@ -91,6 +91,7 @@ public class KeyManagerServiceTest extends BaseTest {
     	String userId = "1001";
     	String password = "123456";
     	String privatekey = generatePkey();
+    	System.out.println("私钥:"+privatekey);
     	String keyName = "aaa";
     	keyManagerService.importPrivateKey(userId, password, privatekey, keyName);
     }
