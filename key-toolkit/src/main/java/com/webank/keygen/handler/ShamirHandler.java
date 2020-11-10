@@ -47,10 +47,8 @@ public class ShamirHandler {
         final byte[][] values = new byte[n][secret.length];
         for (int i = 0; i < secret.length; i++) {
             // for each byte, generate a random polynomial, p
-            //生成一元k-1次方程
             final byte[] p = GF256Util.generate(random, k - 1, secret[i]);
             for (int x = 1; x <= n; x++) {
-                //带入横坐标，得到纵坐标，就是分片值
                 // each part's byte is p(partId)
                 values[x - 1][i] = GF256Util.eval(p, (byte) x);
             }
