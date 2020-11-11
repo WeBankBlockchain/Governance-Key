@@ -39,16 +39,16 @@ public class PkeySharidingServiceTest extends BaseTest {
     
     @Test
     public void testSharding(){
-        String testStr = "this is a test string";
+        String testStr = "0xaaaa...";
         List<String> list = service.shardingPKey(testStr, 5, 3);
         for (String str : list) {
-            log.info(str);
+            System.out.println(str);
         }
         
         List<String> newList = new ArrayList<>();
         newList.add(list.get(0));
         newList.add(list.get(1));
-        newList.add(list.get(4));
+        newList.add(list.get(2));
         log.info(service.recoverPKey(newList));
     }
 

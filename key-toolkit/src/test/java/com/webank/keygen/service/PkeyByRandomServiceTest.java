@@ -36,11 +36,15 @@ import lombok.extern.slf4j.Slf4j;
 public class PkeyByRandomServiceTest extends BaseTest {
 
 	private PkeyByRandomService service = new PkeyByRandomService();
-	    
+	private PkeySM2ByRandomService gmService = new PkeySM2ByRandomService();
+
 	@Test
 	public void testGeneratePrivateKey() throws Exception{
 	    PkeyInfo pkeyInfo = service.generatePrivateKey();
-	    log.info(Numeric.toHexString(pkeyInfo.getPrivateKey()));
+	    System.out.println("SECP256K1:"+Numeric.toHexString(pkeyInfo.getPrivateKey()));
+
+	    PkeyInfo gmKey = gmService.generatePrivateKey();
+		System.out.println("SM2P256V1："+Numeric.toHexString(gmKey.getPrivateKey()));
 	}
 	    
 	@Test

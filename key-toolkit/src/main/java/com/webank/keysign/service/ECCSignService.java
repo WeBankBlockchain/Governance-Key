@@ -51,9 +51,6 @@ public class ECCSignService implements PrivateKeySigner {
         //Sign
         CryptoResult result = NativeInterface.secp256k1Sign(privateKey, hashResult.hash);
         if (result.wedprErrorMessage != null){
-            System.out.println("raw plain :"+Numeric.toHexString(plain));
-            System.out.println("hash :"+hashResult.hash);
-            System.out.println("message  :"+result.wedprErrorMessage);
             log.error("error on generating secp256k1 signature {}", result.wedprErrorMessage);
             return null;
         }

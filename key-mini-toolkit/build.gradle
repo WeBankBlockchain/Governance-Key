@@ -87,7 +87,7 @@ jar {
 }
 
 
-
+/*
 uploadArchives {
     repositories {
         mavenDeployer {
@@ -130,6 +130,8 @@ uploadArchives {
         }
     }
 }
+
+ */
 clean {
     delete 'dist'
     delete 'build'
