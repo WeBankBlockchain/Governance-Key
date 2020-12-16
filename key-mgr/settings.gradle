@@ -1,3 +1,3 @@
 rootProject.name = 'key-mgr'
-include ":key-toolkit"
-project(':key-toolkit').projectDir = new File('../key-toolkit')
+include ":key-core"
+project(':key-core').projectDir = new File('../key-core')

@@ -67,7 +67,7 @@ dependencies {
 
     compile 'mysql:mysql-connector-java'
 
-    provided project(":key-toolkit")
+    provided project(":key-core")
 }
 
 sourceSets {

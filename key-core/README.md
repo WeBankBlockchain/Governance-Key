@@ -1,6 +1,6 @@
 # 组件介绍
 ## 功能介绍
-key-toolkit用于私钥生成、私钥格式转换、私钥分片保管、签名验签、加密解密。支持轻量级jar包接入。
+key-core用于私钥生成、私钥格式转换、私钥分片保管、签名验签、加密解密。支持轻量级jar包接入。
 
 就私钥生成方式而言，支持如下方式：
 *   ECC随机生成私钥，既支持经典的Sec曲线，也支持国密标准sm2曲线
@@ -51,7 +51,7 @@ git clone https://github.com/WeBankBlockchain/key-center.git
 cd key-center
 git checkout dev
 git pull
-cd key-toolkit
+cd key-core
 ```
 
 ### 2. 编译源码
@@ -68,7 +68,7 @@ chmod +x ./gradlew && ./gradlew build -x test
 
 ### 3. 导入jar包
 
-key-toolkit编译之后在根目录下会生成dist文件夹，文件夹中包含key-toolkit.jar。可以将其导入到自己的项目中，例如libs目录下。然后进行依赖配置。gradle依赖配置如下，然后再对自己的项目进行编译。
+编译之后在根目录下会生成dist文件夹，文件夹中包含key-core.jar。可以将其导入到自己的项目中，例如libs目录下。然后进行依赖配置。gradle依赖配置如下，然后再对自己的项目进行编译。
 
 ```
 repositories {
@@ -95,7 +95,7 @@ dependencies {
 ```
 ### 4. 接口使用
 
-key-toolkit中包含若干类服务接口，如下，接口使用可以直接通过new对象然后调用。
+key-core中包含若干类服务接口，如下，接口使用可以直接通过new对象然后调用。
 
 - PkeyByRandomService：随机数通过secp256k1椭圆曲线生成私钥
 - PkeySM2ByRandomService: 随机数通过国密sm2椭圆曲线生成私钥

@@ -1,3 +1,3 @@
 rootProject.name = 'key-center'
-include 'key-toolkit'
+include 'key-core'
 include 'key-mgr'
