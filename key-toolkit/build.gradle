@@ -15,6 +15,8 @@ repositories {
     maven {
         url "http://maven.aliyun.com/nexus/content/groups/public/"
     }
+    maven { url "https://oss.sonatype.org/service/local/staging/deploy/maven2"}
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     mavenLocal()
     mavenCentral()
 }
@@ -41,7 +43,8 @@ dependencies {
     compile 'com.lambdaworks:scrypt:1.4.0'
     compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.60'
     compile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.60'
-    provided project(":key-mini-toolkit")
+    compile 'com.webank:java-crypto-core:1.0.0-SNAPSHOT'
+    //provided project(":key-mini-toolkit")
 }
 
 configurations {
@@ -70,7 +73,7 @@ jar {
     exclude '**/*.xml'
     exclude '**/*.properties'
     exclude '**/*.yml'
-    from configurations.provided.files.collect { it.getName().contains("key-mini-toolkit")?zipTree(it):null}
+   // from configurations.provided.files.collect { it.getName().contains("key-mini-toolkit")?zipTree(it):null}
 
     doLast {
         copy {
