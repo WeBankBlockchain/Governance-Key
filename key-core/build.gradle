@@ -43,7 +43,7 @@ dependencies {
     compile 'com.lambdaworks:scrypt:1.4.0'
     compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.60'
     compile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.60'
-    compile 'com.webank:java-crypto-core:1.0.0-SNAPSHOT'
+    compile 'com.webank:webankblockchain-crypto-core:1.0.0-SNAPSHOT'
     //provided project(":key-mini-toolkit")
 }
 
