@@ -15,13 +15,13 @@
  */
 package com.webank.keygen.utils;
 
-import java.math.BigInteger;
-
+import com.webank.keygen.handler.SM2KeyHandler;
 import org.junit.Assert;
 import org.junit.Test;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.utils.Numeric;
-import com.webank.keygen.handler.SM2KeyHandler;
+
+import java.math.BigInteger;
 
 /**
  * @Description SM2KeyHandlerTest

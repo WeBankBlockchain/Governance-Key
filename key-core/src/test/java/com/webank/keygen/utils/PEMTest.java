@@ -2,7 +2,6 @@ package com.webank.keygen.utils;
 
 import com.webank.keygen.encrypt.PemEncrypt;
 import com.webank.keygen.enums.EccTypeEnums;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.web3j.utils.Numeric;

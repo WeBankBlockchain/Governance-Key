@@ -1,7 +1,6 @@
 package com.webank.keysign.service;
 
 import com.webank.keysign.utils.StringUtils;
-
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -44,8 +44,10 @@ dependencies {
     compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.60'
     compile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.60'
     compile 'com.webank:webankblockchain-crypto-core:1.0.0-SNAPSHOT'
+    testCompile 'org.slf4j:slf4j-simple:1.7.5'
     //provided project(":key-mini-toolkit")
 }
+
 
 configurations {
     all {
@@ -54,6 +56,7 @@ configurations {
         resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
     }
 }
+
 
 sourceSets {
     main {

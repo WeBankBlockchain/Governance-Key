@@ -15,9 +15,10 @@
  */
 package com.webank.keygen.utils;
 
-import java.math.BigInteger;
-
+import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.exception.KeyGenException;
+import com.webank.keygen.handler.SM2KeyHandler;
+import com.webank.keygen.model.PkeyInfo;
 import com.webank.wedpr.crypto.CryptoResult;
 import com.webank.wedpr.crypto.NativeInterface;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +26,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.web3j.utils.Numeric;
 
-import com.webank.keygen.enums.EccTypeEnums;
-import com.webank.keygen.handler.SM2KeyHandler;
-import com.webank.keygen.model.PkeyInfo;
+import java.math.BigInteger;
 
 /**
  * @Description KeyUtilsTest

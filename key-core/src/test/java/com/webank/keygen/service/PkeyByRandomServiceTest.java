@@ -15,14 +15,12 @@
  */
 package com.webank.keygen.service;
 
-import org.junit.Test;
-import org.web3j.utils.Numeric;
-
 import com.webank.keygen.BaseTest;
 import com.webank.keygen.exception.KeyGenException;
 import com.webank.keygen.model.PkeyInfo;
-
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
+import org.web3j.utils.Numeric;
 /**
  * ECKPairServiceTest
  *

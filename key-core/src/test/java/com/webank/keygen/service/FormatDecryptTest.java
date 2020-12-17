@@ -15,15 +15,14 @@
  */
 package com.webank.keygen.service;
 
-import java.security.SecureRandom;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.webank.keygen.encrypt.KeyStoreEncrypt;
 import com.webank.keygen.encrypt.P12Encrypt;
 import com.webank.keygen.encrypt.PemEncrypt;
 import com.webank.keygen.enums.EccTypeEnums;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.security.SecureRandom;
 
 /**
  * @Description FormatDecryptTest

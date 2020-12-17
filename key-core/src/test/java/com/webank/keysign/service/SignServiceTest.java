@@ -15,15 +15,18 @@
  */
 package com.webank.keysign.service;
 
-import java.security.*;
-import java.security.spec.ECGenParameterSpec;
-
 import com.webank.keysign.utils.Numeric;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.SecureRandom;
+import java.security.Security;
+import java.security.spec.ECGenParameterSpec;
 
 /**
  * SignServiceTest

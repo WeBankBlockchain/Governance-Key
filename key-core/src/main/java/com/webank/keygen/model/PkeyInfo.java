@@ -15,7 +15,13 @@
  */
 package com.webank.keygen.model;
 
+import com.webank.keygen.crypto.EccOperations;
+import com.webank.keygen.enums.EccTypeEnums;
+import com.webank.keysign.utils.Numeric;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * PkeyInfo
@@ -26,10 +32,22 @@ import lombok.Data;
  *
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PkeyInfo {
     private byte[] privateKey; 
     private String address;
     private String eccName;
     private String chainCode;
+
+    public PubKeyInfo toPublic(EccTypeEnums eccTypeEnums){
+        EccOperations eccOperations = new EccOperations(eccTypeEnums);
+        byte[] pubkeyBytes = eccOperations.generatePublicKeys(this.privateKey, true);
+        return PubKeyInfo.builder().publicKey(pubkeyBytes)
+                .chaincode(Numeric.hexStringToByteArray(this.chainCode))
+                .build();
+
+    }
 
 }

@@ -17,6 +17,10 @@ package com.webank.keygen.service;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
+
+import com.webank.keygen.crypto.EccOperations;
+import com.webank.keygen.hd.bip32.MasterKeyGenerator;
+import com.webank.keygen.mnemonic.SeedGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.ECKeyPair;
@@ -44,6 +48,9 @@ import lombok.extern.slf4j.Slf4j;
 public class PkeyByMnemonicService{
     
     private static final SecureRandom secureRandom = SecureRandomUtils.secureRandom();
+
+    private SeedGenerator seedGenerator = new SeedGenerator();
+    private MasterKeyGenerator keyGenerator = new MasterKeyGenerator();
     
     /**
      * create mnemonic by entropyStr, entropyStr can be null.
@@ -78,8 +85,11 @@ public class PkeyByMnemonicService{
      */
     public PkeyInfo generatePrivateKeyByMnemonic(String mnemonic, String passphrase, int eccType)
     		throws CipherException, KeyGenException {
-    	byte[] seed = MnemonicUtils.generateSeed(mnemonic, passphrase);
-    	byte[] chainCode = Arrays.copyOfRange(seed, 32, 64);
+    	byte[] seed = seedGenerator.generateSeed(mnemonic, passphrase);
+        byte[] pkeyWithChainCode = keyGenerator.toMasterKey(seed);
+
+        byte[] pkey = Arrays.copyOfRange(pkeyWithChainCode, 0, 32);
+    	byte[] chainCode = Arrays.copyOfRange(pkeyWithChainCode, 32, 64);
 
     	EccTypeEnums type = EccTypeEnums.getEccByType(eccType);
     	if(null == type){
@@ -87,15 +97,8 @@ public class PkeyByMnemonicService{
     		throw new KeyGenException(ExceptionCodeEnums.ECC_TYPE_ERROR);
     	}
 
-    	ECKeyPair ecKeyPair = null;
-    	if(eccType == EccTypeEnums.SECP256K1.getEccType()){
-    		ecKeyPair = ECKeyPair.create(Arrays.copyOfRange(seed, 0, 32));
-    	}else if(eccType == EccTypeEnums.SM2P256V1.getEccType()){
-    		ecKeyPair = SM2KeyHandler.create(Arrays.copyOfRange(seed, 0, 32));
-    	}
-    	else{
-    	    throw new KeyGenException(ExceptionCodeEnums.ECC_TYPE_ERROR);
-        }
+    	ECKeyPair ecKeyPair = new EccOperations(type).getKeyPair(pkey);
+
     	return KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(), 
     			type.getEccName(), Numeric.toHexString(chainCode));
     }

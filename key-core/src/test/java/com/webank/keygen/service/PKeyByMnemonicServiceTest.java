@@ -15,15 +15,14 @@
  */
 package com.webank.keygen.service;
 
-import org.junit.Assert;
-import org.junit.Test;
 import com.webank.keygen.BaseTest;
 import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.exception.KeyGenException;
 import com.webank.keygen.model.PkeyInfo;
 import com.webank.keygen.utils.JacksonUtils;
-
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * PKeyByMnemonicServiceTest

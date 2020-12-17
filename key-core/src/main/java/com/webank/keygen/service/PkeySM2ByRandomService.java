@@ -57,13 +57,7 @@ public class PkeySM2ByRandomService implements PrivateKeyCreator{
         gen.init(privateKey, chainCode.getBytes(UTF_8), SEED_ITERATIONS);
 
         byte[] seed = ((KeyParameter) gen.generateDerivedParameters(SEED_KEY_SIZE)).getKey();
-        ECKeyPair ecKeyPair;
-		try {
-			ecKeyPair = SM2KeyHandler.create((sha256(seed)));
-		} catch (KeyGenException e) {
-			log.error("Exception happen during deriving next chaincode", e);
-			return null;
-		}
+        ECKeyPair ecKeyPair = SM2KeyHandler.create((sha256(seed)));
         return KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(), EccTypeEnums.SM2P256V1.getEccName());
     }
 }

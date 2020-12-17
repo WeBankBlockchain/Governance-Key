@@ -73,7 +73,7 @@ public class SM2KeyHandler {
 		return new ECKeyPair(privateVal, publicVal);
     }
     
-    public static ECKeyPair create(byte[] privKeyBytes) throws KeyGenException {
+    public static ECKeyPair create(byte[] privKeyBytes) {
 		//The pubkey will be 64 byte long
     	BigInteger privKeyBigInt = Numeric.toBigInt(privKeyBytes);
     	byte[] pubKeyBytes = SM2PrivateKeyToPublicKey(privKeyBytes);
