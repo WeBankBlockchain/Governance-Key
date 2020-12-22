@@ -1,3 +1,5 @@
 rootProject.name = 'key-center'
 include 'key-core'
 include 'key-mgr'
+include 'key-core-spring'
+

@@ -6,9 +6,9 @@ import com.webank.keygen.hd.bip44.Purpose44PathBuilder;
 import com.webank.keygen.hd.bip44.path.Purpose44Path;
 import com.webank.keygen.model.PkeyInfo;
 import com.webank.keysign.utils.Numeric;
+import org.bouncycastle.util.encoders.Hex;
 import org.junit.Assert;
 import org.junit.Test;
-import org.spongycastle.util.encoders.Hex;
 
 import java.util.Arrays;
 

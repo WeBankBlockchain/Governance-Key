@@ -7,11 +7,11 @@ import com.webank.keygen.model.PkeyInfo;
 import com.webank.keygen.model.PubKeyInfo;
 import com.webank.keysign.utils.Numeric;
 import lombok.AllArgsConstructor;
+import org.bouncycastle.util.encoders.Hex;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.spongycastle.util.encoders.Hex;
 
 import java.util.Arrays;
 import java.util.Collection;

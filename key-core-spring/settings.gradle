@@ -1,0 +1,3 @@
+rootProject.name = 'key-core-spring'
+include ":key-core"
+project(':key-core').projectDir = new File('../key-core')

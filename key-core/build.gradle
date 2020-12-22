@@ -38,7 +38,7 @@ dependencies {
     compile "com.fasterxml.jackson.core:jackson-core:2.9.6"
     compile "com.fasterxml.jackson.core:jackson-databind:2.9.6"
     compile "com.fasterxml.jackson.core:jackson-annotations:2.9.6"
-    compile 'com.lhalcyon:bip32:1.0.0'
+    //compile 'com.lhalcyon:bip32:1.0.0'
     compile 'org.web3j:core:3.4.0'
     compile 'com.lambdaworks:scrypt:1.4.0'
     compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.60'
