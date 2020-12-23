@@ -1,8 +1,13 @@
 package com.webank.service;
 
 import com.webank.handler.KeyGenAlgoSelectHandler;
+import com.webank.keygen.enums.ExceptionCodeEnums;
+import com.webank.keygen.exception.KeyGenException;
 import com.webank.keygen.face.PrivateKeyCreator;
+import com.webank.keygen.key.KeyBytesConverter;
 import com.webank.keygen.key.KeyComputeAlgorithm;
+import com.webank.keygen.key.KeyEncryptAlgorithm;
+import com.webank.keygen.model.DecryptResult;
 import com.webank.keygen.model.PkeyInfo;
 import com.webank.keygen.service.PkeyByMnemonicService;
 import com.webank.keysign.utils.Numeric;
@@ -10,6 +15,9 @@ import com.webank.model.PkeyInfoVO;
 import com.webank.model.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 @Service
 public class KeyGeneratorService {
@@ -39,7 +47,7 @@ public class KeyGeneratorService {
         return R.ok().put("data", mnemonic);
     }
 
-    /*
+
 
     public byte[] downloadEncryptKey(String privKey, String eccType, String encType, String password, HttpServletResponse response) throws Exception{
         //Encrypt
@@ -69,7 +77,7 @@ public class KeyGeneratorService {
         //get file type(pem, p12, keystore..)
         int index = fileName.lastIndexOf(".");
         if(index == -1){
-            throw new PkeyGenException(ExceptionCodeEnums.PARAM_EXCEPTION);
+            throw new KeyGenException(ExceptionCodeEnums.PARAM_EXCEPTION);
         }
         String fileType = fileName.substring(index+1);
         String encType = Objects.equals("json", fileType)?"keystore":fileType;
@@ -102,7 +110,7 @@ public class KeyGeneratorService {
         //extract encrypt type from fileName
         int index = inputFile.lastIndexOf(".");
         if(index == -1){
-            throw new PkeyGenException(ExceptionCodeEnums.PARAM_EXCEPTION);
+            throw new KeyGenException(ExceptionCodeEnums.PARAM_EXCEPTION);
         }
         String encType = inputFile.substring(index+1);
         KeyEncryptAlgorithm decAlgorithm = this.selectHandler.selectKeyEncryptor(encType);
@@ -130,7 +138,7 @@ public class KeyGeneratorService {
         return ;
     }
 
-     */
+
 
 
 }

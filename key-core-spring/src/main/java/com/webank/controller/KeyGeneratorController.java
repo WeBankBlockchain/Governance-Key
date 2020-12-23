@@ -3,8 +3,11 @@ package com.webank.controller;
 import com.webank.model.R;
 import com.webank.service.KeyGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
@@ -19,16 +22,18 @@ public class KeyGeneratorController {
         return service.random(curve);
     }
 
-    /*
+    @GetMapping("mnemonic")
+    public R mnemonic(){
+        return service.mnemonic();
+    }
+
+
     @PostMapping("transform")
     public void transform(MultipartFile file, String password, String tgtFormat, HttpServletResponse response) throws Exception{
         service.transform(file.getBytes(), file.getOriginalFilename(), password, tgtFormat, response);
     }
 
-    @GetMapping("mnemonic")
-    public R mnemonic(){
-        return service.mnemonic();
-    }
+
 
     @GetMapping("encrypt")
     public void downloadEncryptKey(@RequestParam("privKey") String privKey,
@@ -52,7 +57,7 @@ public class KeyGeneratorController {
         return ResponseEntity.ok(r);
     }
 
-     */
+
 }
 
 
