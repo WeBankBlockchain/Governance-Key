@@ -42,7 +42,7 @@ public class PkeySharidingServiceTest{
     @Test
     public void testSharding(){
         String testStr = randomString();
-        List<String> list = service.shardingPKey(testStr, 5, 3);
+        List<String> list = service.shardingPKey(testStr.getBytes(), 5, 3);
         for (String str : list) {
             System.out.println(str);
         }

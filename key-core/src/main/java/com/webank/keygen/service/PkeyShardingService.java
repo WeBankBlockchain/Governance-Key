@@ -38,17 +38,16 @@ public class PkeyShardingService {
     /**    
      * sharding private key to n parts, and can recover by at least k parts.
      * 
-     * @param privateKey
+     * @param secret
      * @param n the number of parts to produce, n must be <= 255
      * @param k the threshold of joinable parts, k must be <= n
      *       
      * @return List<String>       
      */
-    public List<String> shardingPKey(String privateKey, int n, int k){
-        if(privateKey == null || privateKey.length() == 0){
-            throw new IllegalArgumentException("private key is empty");
+    public List<String> shardingPKey(byte[] secret, int n, int k){
+        if(secret == null || secret.length == 0){
+            throw new IllegalArgumentException("secret is empty");
         }
-        final byte[] secret = privateKey.getBytes(StandardCharsets.UTF_8);
         final Map<Integer, byte[]> parts = ShamirHandler.split(secret, SecureRandomUtils.secureRandom() , n, k);
         List<String> list = new ArrayList<>();
         for(Map.Entry<Integer, byte[]> part : parts.entrySet()){
@@ -67,7 +66,7 @@ public class PkeyShardingService {
      *       
      * @return String       
      */
-    public String recoverPKey(List<String> partList){
+    public byte[] recoverPKey(List<String> partList){
         
         if(partList == null) return null;
         Map<Integer, byte[]> parts = new HashMap<Integer, byte[]>();
@@ -76,6 +75,6 @@ public class PkeyShardingService {
             parts.put(shardingInfo.getShardingNum(), shardingInfo.getShardingContent());
         }
         final byte[] recovered = ShamirHandler.join(parts);
-        return new String(recovered, StandardCharsets.UTF_8);
+        return recovered;
     }
 }
