@@ -50,8 +50,9 @@ public class PkeySM2ByRandomService implements PrivateKeyCreator{
         ECKeyPair ecKeyPair = SM2KeyHandler.generateSM2KeyPair();
         return KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(), EccTypeEnums.SM2P256V1.getEccName());
     }
-    
-    @Override
+
+    //Please refer to PkeyHDDeriveService
+    @Deprecated
     public PkeyInfo generatePrivateKeyByChainCode(byte[] privateKey, String chainCode){
         PKCS5S2ParametersGenerator gen = new PKCS5S2ParametersGenerator(new SHA512Digest());
         gen.init(privateKey, chainCode.getBytes(UTF_8), SEED_ITERATIONS);

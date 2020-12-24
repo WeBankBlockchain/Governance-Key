@@ -1,11 +1,10 @@
-package hd;
+package com.webank.keygen.hd;
 
 import com.webank.keygen.hd.bip32.ExtendedPrivateKey;
 import com.webank.keygen.hd.bip32.ExtendedPublicKey;
 import com.webank.keygen.hd.bip32.MasterKeyGenerator;
 import com.webank.keygen.model.PkeyInfo;
 import com.webank.keygen.model.PubKeyInfo;
-import com.webank.keysign.utils.Numeric;
 import lombok.AllArgsConstructor;
 import org.bouncycastle.util.encoders.Hex;
 import org.junit.Assert;
@@ -42,7 +41,7 @@ public class HDGenerationTests {
     public void test() throws Exception{
         byte[] keyChaincode = new MasterKeyGenerator().toMasterKey(Hex.decode(seed), MasterKeyGenerator.Bitcoin_Seed);;
         PkeyInfo rootKey = PkeyInfo.builder().privateKey(Arrays.copyOfRange(keyChaincode, 0, 32))
-                .chainCode(Numeric.toHexString(Arrays.copyOfRange(keyChaincode, 32, 64)))
+                .chainCode(Arrays.copyOfRange(keyChaincode, 32, 64))
                 .build();
         ExtendedPrivateKey root = new ExtendedPrivateKey(rootKey);
         ExtendedPrivateKey cpriv = root.deriveChild(childIdx);

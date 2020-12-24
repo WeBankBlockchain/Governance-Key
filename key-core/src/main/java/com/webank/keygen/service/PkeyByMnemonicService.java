@@ -15,6 +15,7 @@
  */
 package com.webank.keygen.service;
 
+import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
@@ -53,7 +54,7 @@ public class PkeyByMnemonicService{
     private MasterKeyGenerator keyGenerator = new MasterKeyGenerator();
     
     /**
-     * create mnemonic by entropyStr, entropyStr can be null.
+     * create com.webank.keygen.mnemonic by entropyStr, entropyStr can be null.
      * 
      * @param entropyStr: random  entropy
      * @return String
@@ -77,49 +78,26 @@ public class PkeyByMnemonicService{
         return mnemonic;
     }
     /**    
-     * generate PkeyInfo By mnemonic 
+     * generate PkeyInfo By com.webank.keygen.mnemonic
      *
      * @param mnemonic
      * @param passphrase: password for create seed, it can be null.  
      * @return KeyStoreFileInfo       
      */
-    public PkeyInfo generatePrivateKeyByMnemonic(String mnemonic, String passphrase, int eccType)
-    		throws CipherException, KeyGenException {
+    public PkeyInfo generatePrivateKeyByMnemonic(String mnemonic, String passphrase, EccTypeEnums eccType)
+    		throws KeyGenException {
     	byte[] seed = seedGenerator.generateSeed(mnemonic, passphrase);
         byte[] pkeyWithChainCode = keyGenerator.toMasterKey(seed);
 
         byte[] pkey = Arrays.copyOfRange(pkeyWithChainCode, 0, 32);
     	byte[] chainCode = Arrays.copyOfRange(pkeyWithChainCode, 32, 64);
 
-    	EccTypeEnums type = EccTypeEnums.getEccByType(eccType);
-    	if(null == type){
-    		log.error("ecc type {} error.", eccType);
-    		throw new KeyGenException(ExceptionCodeEnums.ECC_TYPE_ERROR);
-    	}
+        EccOperations eccOperations = new EccOperations(eccType);
+        eccOperations.verifyPrivateKey(new BigInteger(1, pkey));
 
-    	ECKeyPair ecKeyPair = new EccOperations(type).getKeyPair(pkey);
+    	ECKeyPair ecKeyPair = new EccOperations(eccType).getKeyPair(pkey);
 
-    	return KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(), 
-    			type.getEccName(), Numeric.toHexString(chainCode));
+    	return KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(),
+                eccType.getEccName(), chainCode);
     }
-    
-    /**    
-     * generate private key by chainCode  
-     * 
-     * @param mnemonic
-     * @param chainCodeStr
-     * @return
-     * @throws KeyGenException
-     * @throws CipherException      
-     * @return PkeyInfo       
-     */
-    public PkeyInfo generatePrivateKeyByChainCode(String mnemonic, String chainCodeStr, int eccType) throws KeyGenException, CipherException{
-        byte[] chainCode = Numeric.hexStringToByteArray(chainCodeStr);
-        if(chainCode == null || chainCode.length != 32){
-            throw new KeyGenException(ExceptionCodeEnums.CHAIN_CODE_ERROR);
-        }
-        return generatePrivateKeyByMnemonic(mnemonic, chainCodeStr, eccType);
-    }
-
-      
 }

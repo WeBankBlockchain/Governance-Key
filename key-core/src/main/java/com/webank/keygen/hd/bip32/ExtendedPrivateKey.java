@@ -34,12 +34,12 @@ public class ExtendedPrivateKey implements ChildKeyDerivable<ExtendedPrivateKey>
         this.eccOperations = new EccOperations(eccTypeEnums);
 
         this.privKey = priv;
-        this.publicKey = this.privKey.toPublic(eccTypeEnums);
+        this.publicKey = this.privKey.toPublic(eccTypeEnums, true);
         checkPubkey(this.publicKey.getPublicKey());
     }
 
     public ExtendedPrivateKey(PkeyInfo priv){
-        this(priv, EccTypeEnums.SECP256K1 );
+        this(priv, tryResolveEccType(priv.getEccName()));
     }
 
     //childPriv  = priv + hash(cc+index+pub)
@@ -55,7 +55,7 @@ public class ExtendedPrivateKey implements ChildKeyDerivable<ExtendedPrivateKey>
         }
         indexBuffer.putInt(childIdx);//Big endian!!!!
         //hash(cc, pub + childIdx)
-        byte[] I = HmacSha512.INSTANCE.macHash(Numeric.hexStringToByteArray(privKey.getChainCode()), indexBuffer.array());
+        byte[] I = HmacSha512.INSTANCE.macHash(privKey.getChainCode(), indexBuffer.array());
         byte[] Il = Arrays.copyOfRange(I, 0, 32);
         byte[] Ir = Arrays.copyOfRange(I, 32, 64);
         //derive child key = priv + Il
@@ -71,7 +71,7 @@ public class ExtendedPrivateKey implements ChildKeyDerivable<ExtendedPrivateKey>
         ECKeyPair ecKeyPair =this.eccOperations.getKeyPair(ckey);
 
         PkeyInfo pkeyInfo =  KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(),
-                this.eccTypeEnums.getEccName(), Numeric.toHexString(Ir));
+                this.eccTypeEnums.getEccName(), Ir);
         return new ExtendedPrivateKey(pkeyInfo, this.eccTypeEnums);
     }
 
@@ -92,5 +92,11 @@ public class ExtendedPrivateKey implements ChildKeyDerivable<ExtendedPrivateKey>
 
     public PkeyInfo getPkeyInfo() {
         return this.privKey;
+    }
+
+    private static EccTypeEnums tryResolveEccType(String eccName){
+        EccTypeEnums eccTypeEnums = EccTypeEnums.getEccByName(eccName);
+        eccTypeEnums = eccTypeEnums != null?eccTypeEnums:EccTypeEnums.SECP256K1;
+        return eccTypeEnums;
     }
 }

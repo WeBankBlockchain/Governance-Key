@@ -20,9 +20,12 @@ import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.exception.KeyGenException;
 import com.webank.keygen.model.PkeyInfo;
 import com.webank.keygen.utils.JacksonUtils;
+import com.webank.keysign.utils.Numeric;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Objects;
 
 /**
  * PKeyByMnemonicServiceTest
@@ -34,67 +37,53 @@ import org.junit.Test;
  *
  */
 @Slf4j
-public class PKeyByMnemonicServiceTest extends BaseTest {
+public class PKeyByMnemonicServiceTest {
 
 	private PkeyByMnemonicService service = new PkeyByMnemonicService();
 		    
 	@Test
 	public void testCreateMnemonic(){
 	    String mnemonicStr = service.createMnemonic(null);
-	    System.out.println( mnemonicStr);
+	    String[] words = mnemonicStr.split(" ");
+		Assert.assertEquals(12, words.length);
 	}
 
 	@Test
 	public void testCreateMnemonicDefault(){
-		String mnemonicStr = service.createMnemonic();
-		log.info("mnemonic str : {}", mnemonicStr);
+		String mnemonicStr = service.createMnemonic(null);
+		String[] words = mnemonicStr.split(" ");
+		Assert.assertEquals(12, words.length);
 	}
 
 	@Test
-	public void testCreateMnemonicByEntropy() {
+	public void testCreateMnemonicByEntropy128Bits() {
 		String mnemonicStr = service.createMnemonic("0x8a58ab78052b1c02ee5c4957252a415c");
 		Assert.assertEquals("medal shed task apart range accident ride matrix fire citizen motion ridge", mnemonicStr);
 	}
-	
-	@Test
-	public void testGeneratePrivateKeyByMnemonicAbnormally() throws Exception{
-		String mnemonicStr = "medal shed task apart range accident ride matrix fire citizen motion ridge";
-		try {
-			service.generatePrivateKeyByMnemonic(mnemonicStr, null, -1);
-			Assert.assertTrue(false);
-		}
-		catch (KeyGenException e) {
-			Assert.assertTrue(true);
-		}
 
+	@Test
+	public void testCreateMnemonicByEntropy256Bits() {
+		String mnemonicStr = service.createMnemonic("0x8a58ab78052b1c02ee5c4957252a415c8a58ab78052b1c02ee5c4957252a415c");
+		String[] words = mnemonicStr.split(" ");
+		Assert.assertEquals(24, words.length);
 	}
 		    
 	@Test
-	public void testGeneratePrivateKeyByMnemonic() throws Exception{
-	    String mnemonicStr = "alpha segment cube animal wash ozone dream search uphold tennis fury abuse";
-	    PkeyInfo pkeyInfo1 = service.generatePrivateKeyByMnemonic(mnemonicStr, "123456", EccTypeEnums.SM2P256V1.getEccType());
-	    log.info("pkey info : {}", JacksonUtils.toJson(pkeyInfo1));
-	    
-	    PkeyInfo pkeyInfo2 = service.generatePrivateKeyByMnemonic(mnemonicStr, "123456", EccTypeEnums.SECP256K1.getEccType());
-	    log.info("pkey info : {}", JacksonUtils.toJson(pkeyInfo2));
-	}
-	
-	@Test
-	public void testGeneratePrivateKeyByChainCode() throws Exception{
-		String mnemonicStr = "alpha segment cube animal wash ozone dream search uphold tennis fury abuse";
-		try {
-			@SuppressWarnings("unused")
-			PkeyInfo pkeyInfo = service.generatePrivateKeyByChainCode(mnemonicStr, "0x0a1b", EccTypeEnums.SECP256K1.getEccType());
-			Assert.assertTrue(false);
-		}
-		catch (KeyGenException e) {
-			Assert.assertTrue(true);
-		}
-		
-		String chaincodeString  = "0x8902265ac00b3e99baef1ffaffe0e9b23ccd71fb482bc32df25b2877c32c33f5";
+	public void testGeneratePrivateKeyByMnemonic() throws Exception {
 
-		@SuppressWarnings("unused")
-		PkeyInfo pkeyInfo = service.generatePrivateKeyByChainCode(mnemonicStr, chaincodeString, EccTypeEnums.SECP256K1.getEccType());
+		String mnemonicStr = "alpha segment cube animal wash ozone dream search uphold tennis fury abuse";
+		PkeyInfo pkeyInfo1 = service.generatePrivateKeyByMnemonic(mnemonicStr, "123456", EccTypeEnums.SM2P256V1);
+		Assert.assertTrue(Objects.equals("59cac30eff70215cc1fd7567f63589efd5025421a925deeebb09f4d5a33b4dde", Numeric.toHexString(pkeyInfo1.getPrivateKey())));
+		Assert.assertTrue(Objects.equals("0xd833d9616afee92a27fef402965769a81756b7cb", pkeyInfo1.getAddress()));
+		Assert.assertTrue(Objects.equals("2751afb3607a68f39d80cf2535c676a355d57cae812657aad10be39f2ebd113b", Numeric.toHexString(pkeyInfo1.getChainCode())));
+		Assert.assertTrue(Objects.equals("sm2p256v1", pkeyInfo1.getEccName()));
+
+		PkeyInfo pkeyInfo2 = service.generatePrivateKeyByMnemonic(mnemonicStr, "123456", EccTypeEnums.SECP256K1);
+		Assert.assertTrue(Objects.equals("59cac30eff70215cc1fd7567f63589efd5025421a925deeebb09f4d5a33b4dde", Numeric.toHexString(pkeyInfo2.getPrivateKey())));
+		Assert.assertTrue(Objects.equals("0x4bf93852e6b29003d21aa280cdfeca6f3d2e60d7", pkeyInfo2.getAddress()));
+		Assert.assertTrue(Objects.equals("2751afb3607a68f39d80cf2535c676a355d57cae812657aad10be39f2ebd113b", Numeric.toHexString(pkeyInfo2.getChainCode())));
+		Assert.assertTrue(Objects.equals("secp256k1", pkeyInfo2.getEccName()));
+
 	}
 }
 

@@ -49,7 +49,9 @@ public class PkeyByRandomService implements PrivateKeyCreator{
         ECKeyPair ecKeyPair = ECKeyHandler.generateECKeyPair();
         return KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(), EccTypeEnums.SECP256K1.getEccName());
     }
-	
+
+    //Please refer to PkeyHDDeriveService
+    @Deprecated
     public PkeyInfo generatePrivateKeyByChainCode(byte[] privateKey, String chainCode){
         
         PKCS5S2ParametersGenerator gen = new PKCS5S2ParametersGenerator(new SHA512Digest());

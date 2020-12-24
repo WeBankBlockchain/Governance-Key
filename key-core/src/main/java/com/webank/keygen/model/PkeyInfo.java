@@ -36,18 +36,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PkeyInfo {
-    private byte[] privateKey; 
+    private byte[] privateKey;
+    private byte[] chainCode;
+
     private String address;
     private String eccName;
-    private String chainCode;
 
-    public PubKeyInfo toPublic(EccTypeEnums eccTypeEnums){
+    public PubKeyInfo toPublic(EccTypeEnums eccTypeEnums, boolean compressed){
         EccOperations eccOperations = new EccOperations(eccTypeEnums);
-        byte[] pubkeyBytes = eccOperations.generatePublicKeys(this.privateKey, true);
+        byte[] pubkeyBytes = eccOperations.generatePublicKeys(this.privateKey, compressed);
         return PubKeyInfo.builder().publicKey(pubkeyBytes)
-                .chaincode(Numeric.hexStringToByteArray(this.chainCode))
+                .chaincode(this.chainCode)
                 .build();
-
     }
 
 }

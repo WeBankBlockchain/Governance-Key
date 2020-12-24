@@ -1,4 +1,4 @@
-package hd;
+package com.webank.keygen.hd;
 
 import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.hd.bip32.ExtendedPrivateKey;
@@ -21,7 +21,7 @@ public class DerivationSelfComparesTests {
     public void test() throws Exception{
         for(int i=0;i<100;i++){
             String mnemonic = facade.createMnemonic();
-            PkeyInfo pkeyInfo = facade.generatePrivateKeyByMnemonic(mnemonic, "123", EccTypeEnums.SECP256K1.getEccType());
+            PkeyInfo pkeyInfo = facade.generatePrivateKeyByMnemonic(mnemonic, "123", EccTypeEnums.SECP256K1);
             ExtendedPrivateKey root = new ExtendedPrivateKey(pkeyInfo);
             ExtendedPrivateKey subPriv = root.deriveChild(i);
             ExtendedPublicKey subPub1 = subPriv.neuter();

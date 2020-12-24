@@ -22,9 +22,11 @@ import com.webank.keygen.key.KeyEncryptAlgorithm;
 import com.webank.keygen.key.impl.KeystoreEncryptAlgorithm;
 import com.webank.keygen.key.impl.P12EncryptAlgorithm;
 import com.webank.keygen.key.impl.PemEncryptAlgorithm;
+import com.webank.keygen.model.DecryptResult;
 import com.webank.keygen.model.PkeyInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,66 +45,39 @@ public class FormatEncryptTest extends BaseTest{
 
 	private PkeyByRandomService keyGenerationService = new PkeyByRandomService();
 
-	    
-	private String tmpDir;
-	
-	@Before
-	public void init() throws Exception{
-		this.tmpDir = Paths.get(System.getProperty("user.dir"), "tmpTest").toString();
-		Path path = Paths.get(this.tmpDir);
-		if(!Files.exists(path)) {
-			Files.createDirectory(Paths.get(this.tmpDir));
-		}
-	}
-	
-	@After
-	public void destroy() {
-		try {
-			deleteDirectory(new File(this.tmpDir));
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
 	@Test
-	public void testKeyStoreFormat() throws Exception{
-	   PkeyInfo pkey = keyGenerationService.generatePrivateKey();
-	   String password = "123456";
-	   KeyEncryptAlgorithm algorithm = new KeystoreEncryptAlgorithm();
-	   String encryptKey = algorithm.encrypt(password, pkey.getPrivateKey(), pkey.getAddress(), EccTypeEnums.SECP256K1.getEccName());
-	   log.info("keystore encrypt key\n {}", encryptKey);
-	   algorithm.exportKey(encryptKey, pkey.getAddress(), this.tmpDir);
+	public void testKeyStoreFormat() throws Exception {
+		PkeyInfo pkey = keyGenerationService.generatePrivateKey();
+		String password = "123456";
+		KeyEncryptAlgorithm algorithm = new KeystoreEncryptAlgorithm();
+		String encryptKey = algorithm.encrypt(password, pkey.getPrivateKey(), pkey.getAddress(), pkey.getEccName());
+
+		DecryptResult decryptResult = algorithm.decryptFully(password, encryptKey);
+		Assert.assertArrayEquals(pkey.getPrivateKey(), decryptResult.getPrivateKey());
+		Assert.assertTrue(pkey.getEccName().equals(decryptResult.getEccType()));
 	}
 	
 	@Test
 	public void testPEMFormat() throws Exception {
 		PkeyInfo pkey = keyGenerationService.generatePrivateKey();
 		KeyEncryptAlgorithm algorithm = new PemEncryptAlgorithm();
-		String encryptKey = algorithm.encrypt(null, pkey.getPrivateKey(), pkey.getAddress(), EccTypeEnums.SECP256K1.getEccName());
-		log.info("pem encrypt key \n{}", encryptKey);
-		algorithm.exportKey(encryptKey, pkey.getAddress(), this.tmpDir);
+		String encryptKey = algorithm.encrypt(null, pkey.getPrivateKey(), pkey.getAddress(), pkey.getEccName());
+
+		DecryptResult decryptResult = algorithm.decryptFully(null, encryptKey);
+		Assert.assertArrayEquals(pkey.getPrivateKey(), decryptResult.getPrivateKey());
+		Assert.assertTrue(pkey.getEccName().equals(decryptResult.getEccType()));
 	}
 	
 	@Test
 	public void testP12Format() throws Exception {
 		PkeyInfo pkey = keyGenerationService.generatePrivateKey();
-		String password = "123456";
 		KeyEncryptAlgorithm algorithm = new P12EncryptAlgorithm();
-		String encryptKey = algorithm.encrypt(password, pkey.getPrivateKey(), pkey.getAddress(), EccTypeEnums.SECP256K1.getEccName());
-		log.info("p12 encrypt key {}", encryptKey);
-		algorithm.exportKey(encryptKey, pkey.getAddress(), this.tmpDir);
-	}
+		String encryptKey = algorithm.encrypt(null, pkey.getPrivateKey(), pkey.getAddress(), pkey.getEccName());
 
-	
-	static boolean deleteDirectory(File directoryToBeDeleted) {
-	    File[] allContents = directoryToBeDeleted.listFiles();
-	    if (allContents != null) {
-	        for (File file : allContents) {
-	            deleteDirectory(file);
-	        }
-	    }
-	    return directoryToBeDeleted.delete();
+		DecryptResult decryptResult = algorithm.decryptFully(null, encryptKey);
+		Assert.assertArrayEquals(pkey.getPrivateKey(), decryptResult.getPrivateKey());
+		Assert.assertTrue(pkey.getEccName().equals(decryptResult.getEccType()));
 	}
 }
 

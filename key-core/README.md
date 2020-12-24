@@ -159,7 +159,7 @@ private PkeyByMnemonicService service = new PkeyByMnemonicService();
 @Test
 public void testCreateMnemonic(){
     String mnemonicStr = service.createMnemonic(null);
-    log.info("mnemonic str : {}", mnemonicStr);
+    log.info("com.webank.keygen.mnemonic str : {}", mnemonicStr);
 }
 	    
 @Test

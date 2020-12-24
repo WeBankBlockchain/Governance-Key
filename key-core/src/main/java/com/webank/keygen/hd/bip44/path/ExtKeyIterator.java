@@ -56,7 +56,6 @@ final class ExtKeyIterator implements Iterator<ExtendedPrivateKey> {
         boolean continueProcess = true;
         switch (ch){
             case '\'':{//Hardened mark
-                System.out.println(childIndex);
                 this.childIndex = ExtendedKeyUtil.hardIndex(childIndex);
                 break;
             }

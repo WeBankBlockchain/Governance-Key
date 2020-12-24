@@ -17,10 +17,14 @@ package com.webank.keygen.service;
 
 import com.webank.keygen.BaseTest;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.util.encoders.Hex;
+import org.junit.Assert;
 import org.junit.Test;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * PkeySharidingServiceTest
@@ -31,13 +35,13 @@ import java.util.List;
  *
  */
 @Slf4j
-public class PkeySharidingServiceTest extends BaseTest {
+public class PkeySharidingServiceTest{
 
     private PkeyShardingService service = new PkeyShardingService();
     
     @Test
     public void testSharding(){
-        String testStr = "0xaaaa...";
+        String testStr = randomString();
         List<String> list = service.shardingPKey(testStr, 5, 3);
         for (String str : list) {
             System.out.println(str);
@@ -47,7 +51,14 @@ public class PkeySharidingServiceTest extends BaseTest {
         newList.add(list.get(0));
         newList.add(list.get(1));
         newList.add(list.get(2));
-        log.info(service.recoverPKey(newList));
+        String recovered = service.recoverPKey(newList);
+        Assert.assertTrue(Objects.equals(testStr, recovered));
+    }
+
+    private String randomString(){
+        byte[] bytes = new byte[20];
+        new SecureRandom().nextBytes(bytes);
+        return Hex.toHexString(bytes);
     }
 
 }

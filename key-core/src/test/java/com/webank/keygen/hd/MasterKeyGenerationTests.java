@@ -1,4 +1,4 @@
-package hd;
+package com.webank.keygen.hd;
 
 import com.webank.keygen.hd.bip32.MasterKeyGenerator;
 import org.bouncycastle.util.encoders.Hex;

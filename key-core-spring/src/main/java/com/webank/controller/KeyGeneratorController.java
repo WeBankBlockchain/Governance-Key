@@ -22,7 +22,7 @@ public class KeyGeneratorController {
         return service.random(curve);
     }
 
-    @GetMapping("mnemonic")
+    @GetMapping("com.webank.keygen.mnemonic")
     public R mnemonic(){
         return service.mnemonic();
     }

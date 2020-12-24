@@ -64,7 +64,7 @@ public class KeyUtils {
 		return createPkeyInfo(privateKey, publicKey, eccName, null);
 	}
 	
-	public static PkeyInfo createPkeyInfo(BigInteger privateKey, BigInteger publicKey, String eccName, String chainCode) {
+	public static PkeyInfo createPkeyInfo(BigInteger privateKey, BigInteger publicKey, String eccName, byte[] chainCode) {
 		PkeyInfo pkey = new PkeyInfo();
 		//Ensure bytes are 32 byte-len
 		byte[] bytes = Numeric.toBytesPadded(privateKey, 32);
