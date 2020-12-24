@@ -51,7 +51,7 @@ public class PkeySharidingServiceTest{
         newList.add(list.get(0));
         newList.add(list.get(1));
         newList.add(list.get(2));
-        String recovered = service.recoverPKey(newList);
+        String recovered = new String(service.recoverPKey(newList));
         Assert.assertTrue(Objects.equals(testStr, recovered));
     }
 
