@@ -13,4 +13,5 @@ then
 echo 'starting'
 
 java -jar $APP_NAME 
+fi
 
