@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APP_NAME=key-core-web/example/key-core-web.jar
+APP_NAME=../key-core-web/example/key-core-web.jar
 
 pid=`ps -ef|grep $APP_NAME | grep -v grep | awk '{print $2}'`
 kill -9 $pid
