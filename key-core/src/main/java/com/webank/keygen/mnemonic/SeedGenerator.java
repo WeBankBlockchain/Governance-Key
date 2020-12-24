@@ -4,7 +4,7 @@ import com.webank.keygen.crypto.PBKDF2WithHmacSha512;
 
 public class SeedGenerator {
 
-    private static final String MNEMONIC = "com.webank.keygen.mnemonic";
+    private static final String MNEMONIC = "mnemonic";
 
     public byte[] generateSeed(String mnemonic, String passphrase){
         if(passphrase == null) passphrase = "";

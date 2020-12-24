@@ -73,12 +73,14 @@ public class PKeyByMnemonicServiceTest {
 
 		String mnemonicStr = "alpha segment cube animal wash ozone dream search uphold tennis fury abuse";
 		PkeyInfo pkeyInfo1 = service.generatePrivateKeyByMnemonic(mnemonicStr, "123456", EccTypeEnums.SM2P256V1);
+		PkeyInfo pkeyInfo2 = service.generatePrivateKeyByMnemonic(mnemonicStr, "123456", EccTypeEnums.SECP256K1);
+
 		Assert.assertTrue(Objects.equals("59cac30eff70215cc1fd7567f63589efd5025421a925deeebb09f4d5a33b4dde", Numeric.toHexString(pkeyInfo1.getPrivateKey())));
 		Assert.assertTrue(Objects.equals("0xd833d9616afee92a27fef402965769a81756b7cb", pkeyInfo1.getAddress()));
 		Assert.assertTrue(Objects.equals("2751afb3607a68f39d80cf2535c676a355d57cae812657aad10be39f2ebd113b", Numeric.toHexString(pkeyInfo1.getChainCode())));
 		Assert.assertTrue(Objects.equals("sm2p256v1", pkeyInfo1.getEccName()));
 
-		PkeyInfo pkeyInfo2 = service.generatePrivateKeyByMnemonic(mnemonicStr, "123456", EccTypeEnums.SECP256K1);
+
 		Assert.assertTrue(Objects.equals("59cac30eff70215cc1fd7567f63589efd5025421a925deeebb09f4d5a33b4dde", Numeric.toHexString(pkeyInfo2.getPrivateKey())));
 		Assert.assertTrue(Objects.equals("0x4bf93852e6b29003d21aa280cdfeca6f3d2e60d7", pkeyInfo2.getAddress()));
 		Assert.assertTrue(Objects.equals("2751afb3607a68f39d80cf2535c676a355d57cae812657aad10be39f2ebd113b", Numeric.toHexString(pkeyInfo2.getChainCode())));
