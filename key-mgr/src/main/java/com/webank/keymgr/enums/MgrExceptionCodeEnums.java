@@ -33,7 +33,7 @@ public enum MgrExceptionCodeEnums {
 
     PKEY_MGR_STYLE_ERROR(1000, "private key manager style error"),
     PKEY_MGR_CREATE_ERROR(1001,"create user account info file fail"),
-    PEKY_MGR_CREATE_KEYSTORE_BY_MNEMONIC_ERROR(1002,"create keystore file by com.webank.keygen.mnemonic error"),
+    PEKY_MGR_CREATE_KEYSTORE_BY_MNEMONIC_ERROR(1002,"create keystore file by mnemonic error"),
     PKEY_MGR_KEY_FILE_NOT_EXISTS(1003, "key file does not exist"),
     PKEY_MGR_FILE_PARSE_ERROR(1004,"file parse error"),
     PKEY_MGR_ACCOUNT_EXIST(1005,"user account has exist"),
