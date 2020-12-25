@@ -1,5 +1,5 @@
-rootProject.name = 'key-center'
+rootProject.name = 'Gov-Key'
 include 'key-core'
 include 'key-mgr'
-include 'key-core-spring'
+include 'key-core-web'
 
