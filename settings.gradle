@@ -1,5 +1,5 @@
-rootProject.name = 'key-center'
-include 'key-toolkit'
+rootProject.name = 'Gov-Key'
+include 'key-core'
 include 'key-mgr'
-include 'key-mini-toolkit'
+include 'key-core-web'
 
