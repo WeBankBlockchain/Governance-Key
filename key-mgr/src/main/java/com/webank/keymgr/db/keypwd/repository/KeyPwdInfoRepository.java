@@ -44,6 +44,6 @@ public interface KeyPwdInfoRepository extends JpaRepository<KeyPwdInfo, Long>, J
     @Query(value = "update key_pwds_info set key_pwd = ?3 where key_address = ?2 and user_id = ?1", nativeQuery = true)
     public void updateByUserIdAndKeyAddress(String userId, String keyAddress, String newAccPwd);
     
-    public void deleteByUserIdAndKeyAddress(String userId, String keyAddress);
+    public int deleteByUserIdAndKeyAddress(String userId, String keyAddress);
     
 }

@@ -63,7 +63,7 @@ public class KeyPwdInfoDAO {
         keyPwdInfoRepository.updateByUserIdAndKeyAddress(userId, keyAddress, newPwd);
     }
     
-    public void deleteKeyPwdByUserIdAndKeyAddress(String userId, String keyAddress){
-        keyPwdInfoRepository.deleteByUserIdAndKeyAddress(userId, keyAddress);
+    public int deleteKeyPwdByUserIdAndKeyAddress(String userId, String keyAddress){
+        return keyPwdInfoRepository.deleteByUserIdAndKeyAddress(userId, keyAddress);
     }
 }
