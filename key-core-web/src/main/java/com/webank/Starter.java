@@ -1,5 +1,6 @@
 package com.webank;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
  * @data 2020/12/22
  */
 @Component
+@Slf4j
 public class Starter implements CommandLineRunner {
 
     @Value("${server.port}")
@@ -21,7 +23,8 @@ public class Starter implements CommandLineRunner {
         try {
             Runtime.getRuntime().exec("cmd   /c   start   http://localhost:"+port);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.warn("Failed to automatically start browser{}",ex.getMessage());
         }
+        log.info("Please visit http://localhost:{}",port);
     }
 }
