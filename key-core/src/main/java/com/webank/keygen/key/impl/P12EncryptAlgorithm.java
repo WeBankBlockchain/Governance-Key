@@ -1,8 +1,8 @@
 package com.webank.keygen.key.impl;
 
 import com.webank.keygen.encrypt.P12Encrypt;
-import com.webank.keygen.model.DecryptResult;
 import com.webank.keygen.key.KeyEncryptAlgorithm;
+import com.webank.keygen.model.DecryptResult;
 
 public class P12EncryptAlgorithm implements KeyEncryptAlgorithm{
 	@Override

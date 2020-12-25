@@ -15,10 +15,10 @@
  */
 package com.webank.keygen.constants;
 
-import java.math.BigInteger;
-
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
+
+import java.math.BigInteger;
 
 /**
  * @Description SM2Params

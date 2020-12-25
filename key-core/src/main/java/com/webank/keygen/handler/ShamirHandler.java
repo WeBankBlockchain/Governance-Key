@@ -15,12 +15,12 @@ package com.webank.keygen.handler;
  * limitations under the License.
  */
 
+import com.webank.keygen.utils.GF256Util;
+
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.webank.keygen.utils.GF256Util;
 
 /**
  * ShamirHandler

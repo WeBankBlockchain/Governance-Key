@@ -15,9 +15,6 @@
  */
 package com.webank.keygen.model;
 
-import java.io.IOException;
-import java.security.PrivateKey;
-
 import org.bouncycastle.asn1.ASN1Encoding;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -27,6 +24,9 @@ import org.bouncycastle.asn1.x9.X962Parameters;
 import org.bouncycastle.asn1.x9.X9ObjectIdentifiers;
 import org.bouncycastle.jcajce.provider.asymmetric.util.ECUtil;
 import org.web3j.utils.Numeric;
+
+import java.io.IOException;
+import java.security.PrivateKey;
 
 
 /**

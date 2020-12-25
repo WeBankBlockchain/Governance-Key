@@ -15,13 +15,12 @@
  */
 package com.webank.keygen.handler;
 
+import com.webank.keygen.exception.KeyGenException;
 import com.webank.keygen.utils.KeyUtils;
 import com.webank.wedpr.crypto.CryptoResult;
 import com.webank.wedpr.crypto.NativeInterface;
-import org.web3j.crypto.ECKeyPair;
-import com.webank.keygen.exception.KeyGenException;
-
 import lombok.extern.slf4j.Slf4j;
+import org.web3j.crypto.ECKeyPair;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;

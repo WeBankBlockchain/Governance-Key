@@ -17,7 +17,6 @@ package com.webank.keygen.service;
 
 
 import com.webank.keygen.BaseTest;
-import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.key.KeyEncryptAlgorithm;
 import com.webank.keygen.key.impl.KeystoreEncryptAlgorithm;
 import com.webank.keygen.key.impl.P12EncryptAlgorithm;
@@ -25,15 +24,8 @@ import com.webank.keygen.key.impl.PemEncryptAlgorithm;
 import com.webank.keygen.model.DecryptResult;
 import com.webank.keygen.model.PkeyInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * @Description Example

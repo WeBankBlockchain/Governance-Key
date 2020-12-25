@@ -16,21 +16,20 @@
 package com.webank.keygen.service;
 
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.web3j.crypto.Hash.sha256;
-
-import org.bouncycastle.crypto.digests.SHA512Digest;
-import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
-import org.bouncycastle.crypto.params.KeyParameter;
-import org.web3j.crypto.ECKeyPair;
 import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.exception.KeyGenException;
 import com.webank.keygen.face.PrivateKeyCreator;
 import com.webank.keygen.handler.SM2KeyHandler;
 import com.webank.keygen.model.PkeyInfo;
 import com.webank.keygen.utils.KeyUtils;
-
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.crypto.digests.SHA512Digest;
+import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
+import org.bouncycastle.crypto.params.KeyParameter;
+import org.web3j.crypto.ECKeyPair;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.web3j.crypto.Hash.sha256;
 
 /**
  * @Description SM2PkeyByRandomService

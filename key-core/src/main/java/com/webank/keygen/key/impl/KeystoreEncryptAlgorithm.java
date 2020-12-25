@@ -1,9 +1,8 @@
 package com.webank.keygen.key.impl;
 
 import com.webank.keygen.encrypt.KeyStoreEncrypt;
-import com.webank.keygen.model.DecryptResult;
-
 import com.webank.keygen.key.KeyEncryptAlgorithm;
+import com.webank.keygen.model.DecryptResult;
 
 /**
  * Wrapper for keystore encrypt

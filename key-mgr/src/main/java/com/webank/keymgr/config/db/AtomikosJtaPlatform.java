@@ -17,7 +17,6 @@ package com.webank.keymgr.config.db;
 
 import org.hibernate.engine.transaction.jta.platform.internal.AbstractJtaPlatform;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.context.annotation.Conditional;
 
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;

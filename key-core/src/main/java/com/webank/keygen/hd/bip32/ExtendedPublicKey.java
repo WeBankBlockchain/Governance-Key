@@ -3,10 +3,8 @@ package com.webank.keygen.hd.bip32;
 import com.webank.keygen.crypto.EccOperations;
 import com.webank.keygen.crypto.HmacSha512;
 import com.webank.keygen.enums.EccTypeEnums;
-
 import com.webank.keygen.model.PubKeyInfo;
 import com.webank.keygen.utils.ExtendedKeyUtil;
-
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;

@@ -14,14 +14,14 @@
 
 package com.webank.keygen.utils;
 
-import java.util.Base64;
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import com.webank.keygen.enums.ExceptionCodeEnums;
 import com.webank.keygen.exception.KeyGenException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
 
 @Slf4j
 public class AesUtils{

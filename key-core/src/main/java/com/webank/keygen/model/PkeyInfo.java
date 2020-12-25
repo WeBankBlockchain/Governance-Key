@@ -17,7 +17,6 @@ package com.webank.keygen.model;
 
 import com.webank.keygen.crypto.EccOperations;
 import com.webank.keygen.enums.EccTypeEnums;
-import com.webank.keysign.utils.Numeric;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

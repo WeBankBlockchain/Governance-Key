@@ -16,26 +16,21 @@
 package com.webank.keygen.encrypt;
 
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.*;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-
-import com.webank.keygen.model.DecryptResult;
-import com.webank.keygen.utils.KeyUtils;
-import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.web3j.utils.Numeric;
 import com.webank.keygen.enums.KeyFileTypeEnums;
+import com.webank.keygen.model.DecryptResult;
 import com.webank.keygen.model.ECCPrivateKey;
 import com.webank.keygen.utils.CertUtils;
 import com.webank.keygen.utils.FileOperationUtils;
-
+import com.webank.keygen.utils.KeyUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.web3j.utils.Numeric;
+
+import java.io.*;
+import java.security.*;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 
 /**
  * P12Format

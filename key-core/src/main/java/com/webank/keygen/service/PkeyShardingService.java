@@ -15,15 +15,15 @@
  */
 package com.webank.keygen.service;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import com.webank.keygen.handler.ShamirHandler;
 import com.webank.keygen.model.ShardingInfo;
 import com.webank.keygen.utils.JacksonUtils;
 import com.webank.keygen.utils.SecureRandomUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * PkeyShardingService

@@ -16,6 +16,7 @@
 package com.webank.keygen.utils;
 
 import java.security.SecureRandom;
+
 import static java.lang.Byte.toUnsignedInt;
 
 /**

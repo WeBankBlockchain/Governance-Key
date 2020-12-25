@@ -15,22 +15,23 @@
  */
 package com.webank.keygen.handler;
 
-import java.math.BigInteger;
-import java.security.*;
-import java.security.spec.ECGenParameterSpec;
-import java.util.Arrays;
-
+import com.webank.keygen.constants.SM2Constants;
+import com.webank.keygen.exception.KeyGenException;
 import com.webank.keygen.utils.KeyUtils;
 import com.webank.wedpr.crypto.CryptoResult;
 import com.webank.wedpr.crypto.NativeInterface;
+import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.math.ec.ECPoint;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.utils.Numeric;
-import com.webank.keygen.constants.SM2Constants;
-import com.webank.keygen.exception.KeyGenException;
 
-import lombok.extern.slf4j.Slf4j;
+import java.math.BigInteger;
+import java.security.KeyPairGenerator;
+import java.security.SecureRandom;
+import java.security.Security;
+import java.security.spec.ECGenParameterSpec;
+import java.util.Arrays;
 
 /**
  * @Description SM2KeyHandler

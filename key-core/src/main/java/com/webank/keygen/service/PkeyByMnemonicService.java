@@ -15,27 +15,23 @@
  */
 package com.webank.keygen.service;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.Arrays;
-
 import com.webank.keygen.crypto.EccOperations;
+import com.webank.keygen.enums.EccTypeEnums;
+import com.webank.keygen.exception.KeyGenException;
 import com.webank.keygen.hd.bip32.MasterKeyGenerator;
 import com.webank.keygen.mnemonic.SeedGenerator;
-import org.apache.commons.lang3.StringUtils;
-import org.web3j.crypto.CipherException;
-import org.web3j.crypto.ECKeyPair;
-import org.web3j.crypto.MnemonicUtils;
-import org.web3j.utils.Numeric;
-import com.webank.keygen.enums.EccTypeEnums;
-import com.webank.keygen.enums.ExceptionCodeEnums;
-import com.webank.keygen.exception.KeyGenException;
-import com.webank.keygen.handler.SM2KeyHandler;
 import com.webank.keygen.model.PkeyInfo;
 import com.webank.keygen.utils.KeyUtils;
 import com.webank.keygen.utils.SecureRandomUtils;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.web3j.crypto.ECKeyPair;
+import org.web3j.crypto.MnemonicUtils;
+import org.web3j.utils.Numeric;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.Arrays;
 
 /**
  * MnemonicService

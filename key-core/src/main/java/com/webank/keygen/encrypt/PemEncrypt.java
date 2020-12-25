@@ -15,24 +15,13 @@
  */
 package com.webank.keygen.encrypt;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.StringReader;
-import java.math.BigInteger;
-import java.security.KeyFactory;
-import java.security.PrivateKey;
-import java.security.Security;
-import java.security.spec.PKCS8EncodedKeySpec;
-
+import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.enums.KeyFileTypeEnums;
 import com.webank.keygen.handler.ECKeyHandler;
 import com.webank.keygen.handler.SM2KeyHandler;
 import com.webank.keygen.model.DecryptResult;
 import com.webank.keygen.utils.FileOperationUtils;
+import com.webank.keygen.utils.KeyUtils;
 import org.bouncycastle.asn1.ASN1Object;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DERBitString;
@@ -49,8 +38,13 @@ import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 import org.bouncycastle.util.io.pem.PemWriter;
 import org.web3j.utils.Numeric;
-import com.webank.keygen.enums.EccTypeEnums;
-import com.webank.keygen.utils.KeyUtils;
+
+import java.io.*;
+import java.math.BigInteger;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.Security;
+import java.security.spec.PKCS8EncodedKeySpec;
 
 
 /**

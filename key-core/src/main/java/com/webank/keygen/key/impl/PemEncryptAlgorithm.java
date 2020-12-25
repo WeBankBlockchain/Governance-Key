@@ -2,8 +2,8 @@ package com.webank.keygen.key.impl;
 
 import com.webank.keygen.encrypt.PemEncrypt;
 import com.webank.keygen.enums.EccTypeEnums;
-import com.webank.keygen.model.DecryptResult;
 import com.webank.keygen.key.KeyEncryptAlgorithm;
+import com.webank.keygen.model.DecryptResult;
 
 /**
  * @author aaronchu

@@ -1,7 +1,6 @@
 package com.webank.keygen.crypto;
 
 import com.webank.keygen.enums.EccTypeEnums;
-import com.webank.keygen.exception.KeyGenException;
 import com.webank.keygen.handler.SM2KeyHandler;
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.crypto.ec.CustomNamedCurves;

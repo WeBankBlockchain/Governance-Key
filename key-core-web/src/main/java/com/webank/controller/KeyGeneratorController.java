@@ -56,18 +56,4 @@ public class KeyGeneratorController {
         R r = service.getKeyDetail(privKey, eccType);
         return ResponseEntity.ok(r);
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-

@@ -3,7 +3,6 @@ package com.webank.keygen.hd.bip32;
 import com.webank.keygen.crypto.EccOperations;
 import com.webank.keygen.crypto.HmacSha512;
 import com.webank.keygen.enums.EccTypeEnums;
-import com.webank.keygen.exception.KeyGenException;
 import com.webank.keygen.model.PkeyInfo;
 import com.webank.keygen.model.PubKeyInfo;
 import com.webank.keygen.utils.ExtendedKeyUtil;
@@ -13,7 +12,6 @@ import org.web3j.crypto.ECKeyPair;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-import java.security.Signer;
 import java.util.Arrays;
 
 /**
