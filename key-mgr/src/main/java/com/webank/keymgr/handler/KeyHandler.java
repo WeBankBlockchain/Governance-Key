@@ -91,7 +91,7 @@ public class KeyHandler {
     public String exportPrivateKeyFile(String userId, String address, String destinationDirectory) throws Exception
     {
         EncryptKeyInfo key = this.keyPersistenceService.getEncryptKeyInfoByUserIdAndKeyAddress(userId, address);
-    	if(key == null) return null;
+    	if(key == null) throw new KeyMgrException(MgrExceptionCodeEnums.PKEY_MGR_KEY_ADDRESS_NOT_FOUND);
     	return keyEncryptAlgorithm.exportKey(key.getEncryptKey(), address, destinationDirectory);
     }	
     
@@ -112,8 +112,7 @@ public class KeyHandler {
 
     @Transactional
     public boolean updateKeyName(String userId, String address, String newKeyName) throws Exception {
-        keyPersistenceService.updateKeyName(userId, address, newKeyName);
-    	return true;
+        return keyPersistenceService.updateKeyName(userId, address, newKeyName);
     }
 
     @Transactional

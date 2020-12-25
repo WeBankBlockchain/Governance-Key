@@ -46,7 +46,7 @@ public interface EncryptKeyInfoRepository
     
     public List<EncryptKeyDO> findByUserIdAndParentAddress(String userId, String parentAddress);
     
-    public void deleteByUserIdAndKeyAddress(String userId, String keyAddress);
+    public int deleteByUserIdAndKeyAddress(String userId, String keyAddress);
 
     @Transactional
     @Modifying
@@ -56,5 +56,5 @@ public interface EncryptKeyInfoRepository
     @Transactional
     @Modifying
     @Query(value = "update encrypt_keys_info set key_name = ?3 where user_id = ?1 and key_address = ?2", nativeQuery = true)
-    public void updateKeynameByUserIdAndKeyAddress(String userId, String keyAddress, String keyName);
+    public int updateKeynameByUserIdAndKeyAddress(String userId, String keyAddress, String keyName);
 }

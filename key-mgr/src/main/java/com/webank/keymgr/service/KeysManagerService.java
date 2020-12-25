@@ -114,7 +114,7 @@ public class KeysManagerService {
      * @param userId
      * @param keyAddress
      * @param destinationDirectory
-     * @return
+     * @return the file path
      * @throws Exception
      */
     public String exportPrivateKeyFile(String userId, String keyAddress, String destinationDirectory) throws Exception{

@@ -67,16 +67,16 @@ public class EncryptKeyInfoDAO {
 	    return encryptKeyInfoRepository.findByUserIdAndKeyAddress(userId, keyAddress);
 	}
 	
-	public void removeEncryptKey(String userId, String keyAddress){
-	    encryptKeyInfoRepository.deleteByUserIdAndKeyAddress(userId, keyAddress);
+	public int removeEncryptKey(String userId, String keyAddress){
+	    return encryptKeyInfoRepository.deleteByUserIdAndKeyAddress(userId, keyAddress);
 	}
 	
 	public void updateEncrypt(String userId, String keyAddress, String encryptKey){
 	    encryptKeyInfoRepository.updateEncryptByUserIdAndKeyAddress(userId, keyAddress, encryptKey);
 	}
 	
-	public void updateKeyName(String userId, String keyAddress, String keyName){
-	    encryptKeyInfoRepository.updateKeynameByUserIdAndKeyAddress(userId, keyAddress, keyName);
+	public int updateKeyName(String userId, String keyAddress, String keyName){
+	    return encryptKeyInfoRepository.updateKeynameByUserIdAndKeyAddress(userId, keyAddress, keyName);
 	}
 
 	public List<EncryptKeyDO> getChildKeys(String userId, String parentAddress) {

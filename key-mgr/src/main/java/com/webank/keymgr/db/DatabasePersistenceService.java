@@ -58,8 +58,8 @@ public class DatabasePersistenceService implements KeyPersistenceService {
 
     @Override
     public boolean updateKeyName(String userId, String address, String newKeyName) {
-        encryptKeyInfoDAO.updateKeyName(userId, address, newKeyName);
-        return true;
+        int affect = encryptKeyInfoDAO.updateKeyName(userId, address, newKeyName);
+        return affect > 0;
     }
 
     @Override
@@ -74,14 +74,14 @@ public class DatabasePersistenceService implements KeyPersistenceService {
     @Override
     @Transactional
     public boolean removeEncryptKey(String userId, String keyAddress) {
-        encryptKeyInfoDAO.removeEncryptKey(userId, keyAddress);
+        int affected = encryptKeyInfoDAO.removeEncryptKey(userId, keyAddress);
+        if(affected == 0){
+            log.info("user {} with key {} does not exist", userId, keyAddress);
+            return false;
+        }
         if(systemConfig.isStorePwd()){
-            KeyPwdInfo keyPwdInfo = keyPwdInfoDAO.getUserKeyPwdInfoByUserIdAndKeyAddress(userId, keyAddress);
-            if (keyPwdInfo == null) {
-                log.info("key {} does not exist", keyAddress);
-                return false;
-            }
-            keyPwdInfoDAO.deleteKeyPwdByUserIdAndKeyAddress(userId, keyAddress);
+            affected = keyPwdInfoDAO.deleteKeyPwdByUserIdAndKeyAddress(userId, keyAddress);
+            if(affected == 0) return false;
         }
         return true;
     }
