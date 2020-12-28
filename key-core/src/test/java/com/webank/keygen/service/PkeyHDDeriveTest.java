@@ -22,7 +22,7 @@ public class PkeyHDDeriveTest {
     @Test
     public void testBuildBip44Path(){
         String path = hdService.getPurpose44PathBuilder().m()
-                .purpose44().coinType(2)
+                .purpose44().sceneType(2)
                 .account(3)
                 .change(4)
                 .addressIndex(5)

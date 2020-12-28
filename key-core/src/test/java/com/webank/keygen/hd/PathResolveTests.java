@@ -24,7 +24,7 @@ public class PathResolveTests {
         Purpose44Path path = Purpose44PathBuilder.builder()
                 .m()
                 .purpose44()
-                .coinType(1)
+                .sceneType(1)
                 .account(2)
                 .change(30)
                 .addressIndex(66)
