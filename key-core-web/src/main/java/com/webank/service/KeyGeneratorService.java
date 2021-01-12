@@ -30,14 +30,13 @@ public class KeyGeneratorService {
 
     public R random(String curve) throws Exception{
         PrivateKeyCreator keyCreator = selectHandler.selectKeyCreator(curve);
-        KeyComputeAlgorithm keyComputor = selectHandler.selectKeyComputor(curve);
 
         PkeyInfo pkey = keyCreator.generatePrivateKey();
 
         PkeyInfoVO vo = new PkeyInfoVO();
         vo.setAddress(pkey.getAddress());
         vo.setPrivateKeyHex(Numeric.toHexString(pkey.getPrivateKey()));
-        vo.setPubKeyHex(keyComputor.computePublicKey(pkey.getPrivateKey()));
+        vo.setPubKeyHex(Numeric.toHexString(pkey.getPublicKey().getPublicKey()));
 
         return R.ok().put("data", vo);
     }
@@ -96,13 +95,16 @@ public class KeyGeneratorService {
             throw new IllegalArgumentException("privKey cannot be null");
         }
         byte[] keyBytes = Numeric.hexStringToByteArray(privKey);
-        KeyComputeAlgorithm algorithm = this.selectHandler.selectKeyComputor(eccType);
-        String pubkeyHex = algorithm.computePublicKey(keyBytes);
-        String address = algorithm.computeAddress(keyBytes);
+        PkeyInfo pkeyInfo = PkeyInfo
+                .builder().privateKey(keyBytes)
+                .eccName(eccType)
+                .chainCode(null)
+                .build();
+
         PkeyInfoVO pkeyDetail = new PkeyInfoVO();
         pkeyDetail.setPrivateKeyHex(privKey);
-        pkeyDetail.setPubKeyHex(pubkeyHex);
-        pkeyDetail.setAddress(address);
+        pkeyDetail.setPubKeyHex(Numeric.toHexString(pkeyInfo.getPublicKey().getPublicKey()));
+        pkeyDetail.setAddress(pkeyInfo.getAddress());
         return R.ok().put("data", pkeyDetail);
     }
 

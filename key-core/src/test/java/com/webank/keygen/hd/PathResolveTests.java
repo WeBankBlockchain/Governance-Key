@@ -1,5 +1,6 @@
 package com.webank.keygen.hd;
 
+import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.hd.bip32.ExtendedPrivateKey;
 import com.webank.keygen.hd.bip32.MasterKeyGenerator;
 import com.webank.keygen.hd.bip44.Purpose44PathBuilder;
@@ -37,6 +38,7 @@ public class PathResolveTests {
         byte[] keyWithChaincode = new MasterKeyGenerator().toMasterKey(seed, MasterKeyGenerator.Bitcoin_Seed);
         PkeyInfo pkeyInfo = PkeyInfo.builder().privateKey(Arrays.copyOfRange(keyWithChaincode, 0,32))
                 .chainCode(Arrays.copyOfRange(keyWithChaincode, 32, 64))
+                .eccName(EccTypeEnums.SECP256K1.getEccName())
                 .build();
         ExtendedPrivateKey root = new ExtendedPrivateKey(pkeyInfo);
         ExtendedPrivateKey derived= path.deriveKey(root);

@@ -22,6 +22,7 @@ import com.webank.keygen.face.PrivateKeyCreator;
 import com.webank.keygen.handler.SM2KeyHandler;
 import com.webank.keygen.model.PkeyInfo;
 import com.webank.keygen.utils.KeyUtils;
+import com.webank.keysign.utils.RandomUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.digests.SHA512Digest;
 import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
@@ -47,7 +48,8 @@ public class PkeySM2ByRandomService implements PrivateKeyCreator{
     public PkeyInfo generatePrivateKey() throws KeyGenException {
         
         ECKeyPair ecKeyPair = SM2KeyHandler.generateSM2KeyPair();
-        return KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(), EccTypeEnums.SM2P256V1.getEccName());
+        byte[] chaincode = RandomUtils.randomBytes(32);
+        return KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(), EccTypeEnums.SM2P256V1.getEccName(), chaincode);
     }
 
     //Please refer to PkeyHDDeriveService

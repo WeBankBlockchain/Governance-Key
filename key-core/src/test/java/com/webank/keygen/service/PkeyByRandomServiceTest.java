@@ -40,7 +40,7 @@ public class PkeyByRandomServiceTest {
 		Assert.assertEquals(32, pkeyInfo.getPrivateKey().length);
 		Assert.assertTrue(null != pkeyInfo.getAddress() && !pkeyInfo.getAddress().isEmpty());
 		Assert.assertTrue(EccTypeEnums.SECP256K1.getEccName().equals(pkeyInfo.getEccName()));
-		Assert.assertNull(pkeyInfo.getChainCode());
+		Assert.assertNotNull(pkeyInfo.getChainCode());
 	}
 
 }

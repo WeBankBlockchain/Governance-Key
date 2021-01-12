@@ -37,7 +37,7 @@ public class PKeySM2ByRandomServiceTest{
 		Assert.assertEquals(32, pkeyInfo.getPrivateKey().length);
 		Assert.assertTrue(null != pkeyInfo.getAddress() && !pkeyInfo.getAddress().isEmpty());
 		Assert.assertTrue(EccTypeEnums.SM2P256V1.getEccName().equals(pkeyInfo.getEccName()));
-		Assert.assertNull(pkeyInfo.getChainCode());
+		Assert.assertNotNull(pkeyInfo.getChainCode());
 	}
 
 }
