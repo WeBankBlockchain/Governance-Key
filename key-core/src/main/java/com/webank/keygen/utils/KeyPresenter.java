@@ -27,7 +27,7 @@ public class KeyPresenter {
     }
 
     public static byte[] asBytes(String hexKey){
-        return Hex.decode(hexKey);
+        return Numeric.hexStringToByteArray(hexKey);
     }
 
     public static byte[] asBytes(BigInteger bigIntegerKey){
