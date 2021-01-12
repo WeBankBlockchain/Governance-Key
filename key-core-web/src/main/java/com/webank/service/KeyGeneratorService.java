@@ -10,6 +10,7 @@ import com.webank.keygen.key.KeyEncryptAlgorithm;
 import com.webank.keygen.model.DecryptResult;
 import com.webank.keygen.model.PkeyInfo;
 import com.webank.keygen.service.PkeyByMnemonicService;
+import com.webank.keygen.utils.KeyPresenter;
 import com.webank.keysign.utils.Numeric;
 import com.webank.model.PkeyInfoVO;
 import com.webank.model.R;
@@ -35,8 +36,8 @@ public class KeyGeneratorService {
 
         PkeyInfoVO vo = new PkeyInfoVO();
         vo.setAddress(pkey.getAddress());
-        vo.setPrivateKeyHex(Numeric.toHexString(pkey.getPrivateKey()));
-        vo.setPubKeyHex(Numeric.toHexString(pkey.getPublicKey().getPublicKey()));
+        vo.setPrivateKeyHex(KeyPresenter.asString(pkey.getPrivateKey()));
+        vo.setPubKeyHex(KeyPresenter.asString(pkey.getPublicKey().getPublicKey()));
 
         return R.ok().put("data", vo);
     }
@@ -87,7 +88,7 @@ public class KeyGeneratorService {
         if(rawkey == null){
             return R.error("请确保密码正确");
         }
-        return R.ok().put("data", Numeric.toHexString(rawkey));
+        return R.ok().put("data", KeyPresenter.asString(rawkey));
     }
 
     public R getKeyDetail(String privKey, String eccType) throws Exception {
@@ -103,7 +104,7 @@ public class KeyGeneratorService {
 
         PkeyInfoVO pkeyDetail = new PkeyInfoVO();
         pkeyDetail.setPrivateKeyHex(privKey);
-        pkeyDetail.setPubKeyHex(Numeric.toHexString(pkeyInfo.getPublicKey().getPublicKey()));
+        pkeyDetail.setPubKeyHex(KeyPresenter.asString(pkeyInfo.getPublicKey().getPublicKey()));
         pkeyDetail.setAddress(pkeyInfo.getAddress());
         return R.ok().put("data", pkeyDetail);
     }
