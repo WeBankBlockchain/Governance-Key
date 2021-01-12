@@ -10,6 +10,7 @@ import com.webank.keygen.key.KeyEncryptAlgorithm;
 import com.webank.keygen.model.DecryptResult;
 import com.webank.keygen.model.PkeyInfo;
 import com.webank.keygen.service.PkeyByMnemonicService;
+import com.webank.keygen.utils.KeyPresenter;
 import com.webank.keysign.utils.Numeric;
 import com.webank.model.PkeyInfoVO;
 import com.webank.model.R;
@@ -30,14 +31,13 @@ public class KeyGeneratorService {
 
     public R random(String curve) throws Exception{
         PrivateKeyCreator keyCreator = selectHandler.selectKeyCreator(curve);
-        KeyComputeAlgorithm keyComputor = selectHandler.selectKeyComputor(curve);
 
         PkeyInfo pkey = keyCreator.generatePrivateKey();
 
         PkeyInfoVO vo = new PkeyInfoVO();
         vo.setAddress(pkey.getAddress());
-        vo.setPrivateKeyHex(Numeric.toHexString(pkey.getPrivateKey()));
-        vo.setPubKeyHex(keyComputor.computePublicKey(pkey.getPrivateKey()));
+        vo.setPrivateKeyHex(KeyPresenter.asString(pkey.getPrivateKey()));
+        vo.setPubKeyHex(KeyPresenter.asString(pkey.getPublicKey().getPublicKey()));
 
         return R.ok().put("data", vo);
     }
@@ -88,7 +88,7 @@ public class KeyGeneratorService {
         if(rawkey == null){
             return R.error("请确保密码正确");
         }
-        return R.ok().put("data", Numeric.toHexString(rawkey));
+        return R.ok().put("data", KeyPresenter.asString(rawkey));
     }
 
     public R getKeyDetail(String privKey, String eccType) throws Exception {
@@ -96,13 +96,16 @@ public class KeyGeneratorService {
             throw new IllegalArgumentException("privKey cannot be null");
         }
         byte[] keyBytes = Numeric.hexStringToByteArray(privKey);
-        KeyComputeAlgorithm algorithm = this.selectHandler.selectKeyComputor(eccType);
-        String pubkeyHex = algorithm.computePublicKey(keyBytes);
-        String address = algorithm.computeAddress(keyBytes);
+        PkeyInfo pkeyInfo = PkeyInfo
+                .builder().privateKey(keyBytes)
+                .eccName(eccType)
+                .chainCode(null)
+                .build();
+
         PkeyInfoVO pkeyDetail = new PkeyInfoVO();
         pkeyDetail.setPrivateKeyHex(privKey);
-        pkeyDetail.setPubKeyHex(pubkeyHex);
-        pkeyDetail.setAddress(address);
+        pkeyDetail.setPubKeyHex(KeyPresenter.asString(pkeyInfo.getPublicKey().getPublicKey()));
+        pkeyDetail.setAddress(pkeyInfo.getAddress());
         return R.ok().put("data", pkeyDetail);
     }
 

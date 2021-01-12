@@ -77,7 +77,8 @@ public class PkeyHDDeriveTest {
 
         Assert.assertTrue(Objects.equals("1a4f455cbec1608c948b3eee15a73e45ceb8fffe75b770df0beb5e83345cbf6a", Numeric.toHexString(pkeyInfo1.getPrivateKey())));
         Assert.assertTrue(Objects.equals("ebe916ee66bac5af9ae2ed5d7d749d08b079ba5327fe8a9ba2fc1bdc10e1646c", Numeric.toHexString(pkeyInfo1.getChainCode())));
-        Assert.assertTrue(Objects.equals("0x438dc6fe9c1ab388da478924b8cee4f09e72b857", pkeyInfo1.getAddress()));
+        String addr = pkeyInfo1.getAddress();
+        Assert.assertTrue(Objects.equals("0x438dc6fe9c1ab388da478924b8cee4f09e72b857", addr));
         Assert.assertTrue(Objects.equals("sm2p256v1", pkeyInfo1.getEccName()));
     }
 

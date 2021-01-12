@@ -60,7 +60,6 @@ public class KeyUtils {
 		//Ensure bytes are 32 byte-len
 		byte[] bytes = Numeric.toBytesPadded(privateKey, 32);
 		pkey.setPrivateKey(bytes);
-		pkey.setAddress("0x"+Keys.getAddress(publicKey));//public key to address is curve-non-relevant
 		pkey.setEccName(eccName);
 		pkey.setChainCode(chainCode);
 		return pkey;

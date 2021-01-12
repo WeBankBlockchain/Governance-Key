@@ -34,7 +34,7 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 
 /**
- * MnemonicService
+ * MnemonicService.
  *
  * @Description: MnemonicService
  * @author graysonzhang
@@ -50,10 +50,10 @@ public class PkeyByMnemonicService{
     private MasterKeyGenerator keyGenerator = new MasterKeyGenerator();
     
     /**
-     * create com.webank.keygen.mnemonic by entropyStr, entropyStr can be null.
+     * create mnemonic by entropyStr, entropyStr can be null. If entropy is null, a 128 bit random entropy will be used.
      * 
      * @param entropyStr: random  entropy
-     * @return String
+     * @return mnemonic. mnemonic length is determined by entrophy length
      */
     public String createMnemonic(String entropyStr) {
         byte[] initialEntropy;
@@ -67,6 +67,11 @@ public class PkeyByMnemonicService{
         return mnemonic;
     }
 
+    /**
+     * create mnemonic. A 128 bit random entropy will be used.
+     *
+     * @return mnemonic. mnemonic length is 12
+     */
     public String createMnemonic() {
         byte[] initialEntropy = new byte[16];
         secureRandom.nextBytes(initialEntropy);
@@ -74,11 +79,11 @@ public class PkeyByMnemonicService{
         return mnemonic;
     }
     /**    
-     * generate PkeyInfo By com.webank.keygen.mnemonic
+     * generate PkeyInfo by mnemonic
      *
      * @param mnemonic
      * @param passphrase: password for create seed, it can be null.  
-     * @return KeyStoreFileInfo       
+     * @return PkeyInfo
      */
     public PkeyInfo generatePrivateKeyByMnemonic(String mnemonic, String passphrase, EccTypeEnums eccType)
     		throws KeyGenException {

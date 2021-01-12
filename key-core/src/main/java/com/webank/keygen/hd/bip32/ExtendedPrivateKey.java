@@ -27,20 +27,19 @@ public class ExtendedPrivateKey implements ChildKeyDerivable<ExtendedPrivateKey>
     private PkeyInfo privKey;
     private PubKeyInfo publicKey;
 
-    public ExtendedPrivateKey(PkeyInfo priv,EccTypeEnums eccTypeEnums){
-        this.eccTypeEnums = eccTypeEnums;
+    public ExtendedPrivateKey(PkeyInfo priv){
+        this.eccTypeEnums = EccTypeEnums.getEccByName(priv.getEccName());
         this.eccOperations = new EccOperations(eccTypeEnums);
 
         this.privKey = priv;
-        this.publicKey = this.privKey.toPublic(eccTypeEnums, true);
-        checkPubkey(this.publicKey.getPublicKey());
-    }
+        this.publicKey = this.privKey.getPublicKey();
+}
 
-    public ExtendedPrivateKey(PkeyInfo priv){
-        this(priv, tryResolveEccType(priv.getEccName()));
-    }
-
-    //childPriv  = priv + hash(cc+index+pub)
+    /**
+     * Derive a sub private key by chaincode and child index
+     * @param childIdx ExtendedPrivateKey
+     * @return
+     */
     @Override
     public ExtendedPrivateKey deriveChild(int childIdx) {
         //Buffer contains "pubkey(33bytes)" + "childIdx(4bytes)"
@@ -49,7 +48,7 @@ public class ExtendedPrivateKey implements ChildKeyDerivable<ExtendedPrivateKey>
             indexBuffer.position(1);
             indexBuffer.put(privKey.getPrivateKey());
         } else {
-            indexBuffer.put(publicKey.getPublicKey());
+            indexBuffer.put(this.eccOperations.compress(publicKey.getPublicKey()));
         }
         indexBuffer.putInt(childIdx);//Big endian!!!!
         //hash(cc, pub + childIdx)
@@ -70,31 +69,27 @@ public class ExtendedPrivateKey implements ChildKeyDerivable<ExtendedPrivateKey>
 
         PkeyInfo pkeyInfo =  KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(),
                 this.eccTypeEnums.getEccName(), Ir);
-        return new ExtendedPrivateKey(pkeyInfo, this.eccTypeEnums);
+        return new ExtendedPrivateKey(pkeyInfo);
     }
 
+    /**
+     * Get corresponding public key
+     * @return ExtendedPublicKey
+     */
     public ExtendedPublicKey neuter(){
-        return new ExtendedPublicKey(publicKey, this.eccTypeEnums);
+        return new ExtendedPublicKey(publicKey);
     }
 
+    /**
+     * Get public key of sub private key
+     * @param childIdx
+     * @return ExtendedPublicKey
+     */
     public ExtendedPublicKey deriveChildPubkey(int childIdx){
         return this.neuter().deriveChild(childIdx);
     }
 
-
-    private static void checkPubkey(byte[] publicKey) {
-        if(!ExtendedKeyUtil.isCompressedPubkey(publicKey)){
-            throw new RuntimeException("public key should be compressed");
-        }
-    }
-
     public PkeyInfo getPkeyInfo() {
         return this.privKey;
-    }
-
-    private static EccTypeEnums tryResolveEccType(String eccName){
-        EccTypeEnums eccTypeEnums = EccTypeEnums.getEccByName(eccName);
-        eccTypeEnums = eccTypeEnums != null?eccTypeEnums:EccTypeEnums.SECP256K1;
-        return eccTypeEnums;
     }
 }

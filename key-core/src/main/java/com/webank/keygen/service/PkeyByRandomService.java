@@ -21,6 +21,7 @@ import com.webank.keygen.face.PrivateKeyCreator;
 import com.webank.keygen.handler.ECKeyHandler;
 import com.webank.keygen.model.PkeyInfo;
 import com.webank.keygen.utils.KeyUtils;
+import com.webank.keysign.utils.RandomUtils;
 import org.bouncycastle.crypto.digests.SHA512Digest;
 import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
 import org.bouncycastle.crypto.params.KeyParameter;
@@ -31,7 +32,7 @@ import static org.web3j.crypto.Hash.sha256;
 
 
 /**
- * PkeyService
+ * PkeyService . Generates secp256k1 private key.
  *
  * @Description: PkeyService
  * @author graysonzhang
@@ -43,11 +44,17 @@ public class PkeyByRandomService implements PrivateKeyCreator{
     private static final int SEED_ITERATIONS = 2048;
     private static final int SEED_KEY_SIZE = 512;
 
+    /**
+     * Generate secp256k1 private key.
+     * @return secp256k1 private key.
+     * @throws KeyGenException
+     */
     @Override
     public PkeyInfo generatePrivateKey() throws KeyGenException {
         
         ECKeyPair ecKeyPair = ECKeyHandler.generateECKeyPair();
-        return KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(), EccTypeEnums.SECP256K1.getEccName());
+        byte[] chaincode = RandomUtils.randomBytes(32);
+        return KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(), EccTypeEnums.SECP256K1.getEccName(), chaincode);
     }
 
     //Please refer to PkeyHDDeriveService

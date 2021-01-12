@@ -3,6 +3,7 @@ package com.webank.keygen.hd.bip32;
 import com.webank.keygen.crypto.EccOperations;
 import com.webank.keygen.crypto.HmacSha512;
 import com.webank.keygen.enums.EccTypeEnums;
+import com.webank.keygen.model.PkeyInfo;
 import com.webank.keygen.model.PubKeyInfo;
 import com.webank.keygen.utils.ExtendedKeyUtil;
 
@@ -23,15 +24,20 @@ public class ExtendedPublicKey implements ChildKeyDerivable<ExtendedPublicKey>{
     private PubKeyInfo publicKey;
 
 
-    public ExtendedPublicKey(PubKeyInfo publicKey,EccTypeEnums eccTypeEnums){
-        this.eccTypeEnums = eccTypeEnums;
+    public ExtendedPublicKey(PubKeyInfo publicKey){
+        this.eccTypeEnums = EccTypeEnums.getEccByName(publicKey.getEccName());
         this.eccOperations = new EccOperations(eccTypeEnums);
-
         this.publicKey = publicKey;
 
     }
 
     //pub + G*hash(cc+i+pub) = G*priv + G*hash(cc+i+pub) = G(priv + hash(cc+i+pub)) = G(childPriv)
+
+    /**
+     * Derive a child key by chaincode and child index
+     * @param childIdx
+     * @return ExtendedPublicKey
+     */
     @Override
     public ExtendedPublicKey deriveChild(int childIdx) {
         //Buffer contains "pubkey(33bytes)" + "childIdx(4bytes)"
@@ -39,7 +45,7 @@ public class ExtendedPublicKey implements ChildKeyDerivable<ExtendedPublicKey>{
         if (ExtendedKeyUtil.isHardened(childIdx)) {
             throw new RuntimeException("Hardened child cannot be derived for public key");
         } else {
-            indexBuffer.put(publicKey.getPublicKey());
+            indexBuffer.put(this.eccOperations.compress(publicKey.getPublicKey()));
         }
         indexBuffer.putInt(childIdx);//Big endian!!!!
         //hash(cc, pub + childIdx)
@@ -50,9 +56,9 @@ public class ExtendedPublicKey implements ChildKeyDerivable<ExtendedPublicKey>{
         BigInteger Ili = new BigInteger(1, Il);
         byte[] childPoint = eccOperations.pubkeyAdd(
                 this.publicKey.getPublicKey(),
-                eccOperations.generatePublicKeys(Il, true),//Il * G
+                eccOperations.generatePublicKeys(Il, false),//Il * G
                 true,
-                true
+                false
                 );
 
         if (Ili.compareTo(eccOperations.getN()) >= 0 || childPoint == null) {
@@ -61,17 +67,13 @@ public class ExtendedPublicKey implements ChildKeyDerivable<ExtendedPublicKey>{
         PubKeyInfo pkeyInfo = PubKeyInfo.builder()
                 .publicKey(childPoint)
                 .chaincode(Ir)
+                .eccName(this.eccTypeEnums.getEccName())
                 .build();
-        return new ExtendedPublicKey(pkeyInfo, this.eccTypeEnums);
+        return new ExtendedPublicKey(pkeyInfo);
     }
 
-    public PubKeyInfo pubKeyInfo(boolean to65Bytes){
-        //Decompress it first to 65 bytes
-        if(to65Bytes){
-            byte[] pubBytes = this.eccOperations.decompress(this.publicKey.getPublicKey());
-            return PubKeyInfo.builder().publicKey(pubBytes).chaincode(publicKey.getChaincode()).build();
-        }
-        return (PubKeyInfo)this.publicKey.clone();
+    public PubKeyInfo getPubInfo() {
+        return this.publicKey;
     }
 
     @Override

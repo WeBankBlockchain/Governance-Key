@@ -1,5 +1,7 @@
 package com.webank.keygen.hd;
 
+import com.webank.keygen.crypto.EccOperations;
+import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.hd.bip32.ExtendedPrivateKey;
 import com.webank.keygen.hd.bip32.ExtendedPublicKey;
 import com.webank.keygen.hd.bip32.MasterKeyGenerator;
@@ -42,16 +44,17 @@ public class HDGenerationTests {
         byte[] keyChaincode = new MasterKeyGenerator().toMasterKey(Hex.decode(seed), MasterKeyGenerator.Bitcoin_Seed);;
         PkeyInfo rootKey = PkeyInfo.builder().privateKey(Arrays.copyOfRange(keyChaincode, 0, 32))
                 .chainCode(Arrays.copyOfRange(keyChaincode, 32, 64))
-                .build();
+                .eccName(EccTypeEnums.SECP256K1.getEccName())
+               .build();
         ExtendedPrivateKey root = new ExtendedPrivateKey(rootKey);
         ExtendedPrivateKey cpriv = root.deriveChild(childIdx);
         ExtendedPublicKey cpub = root.deriveChildPubkey(childIdx);
 
         PkeyInfo privKey = cpriv.getPkeyInfo();
-        PubKeyInfo pubKeyInfo = cpub.pubKeyInfo(false);
-
+        PubKeyInfo pubKeyInfo = cpub.getPubInfo();
+        EccOperations eccOperations = new EccOperations(EccTypeEnums.SECP256K1);
         Assert.assertEquals(subPriv, Hex.toHexString(privKey.getPrivateKey()));
-        Assert.assertEquals(subPub, Hex.toHexString(pubKeyInfo.getPublicKey()));
+        Assert.assertEquals(subPub, Hex.toHexString(eccOperations.compress(pubKeyInfo.getPublicKey())));
 
     }
 }

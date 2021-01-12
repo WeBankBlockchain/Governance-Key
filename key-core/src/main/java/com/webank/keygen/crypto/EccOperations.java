@@ -49,13 +49,13 @@ public class EccOperations {
         return sum.getEncoded(compressed);
     }
 
-    public byte[] decompress(byte[] compressedPoint) {
-        ECPoint ecPoint = CURVE.getCurve().decodePoint(compressedPoint);
+    public byte[] decompress(byte[] point) {
+        ECPoint ecPoint = CURVE.getCurve().decodePoint(point);
         return ecPoint.getEncoded(false);
     }
 
-    public byte[] compress(byte[] compressedPoint) {
-        ECPoint ecPoint = CURVE.getCurve().decodePoint(compressedPoint);
+    public byte[] compress(byte[] point) {
+        ECPoint ecPoint = CURVE.getCurve().decodePoint(point);
         return ecPoint.getEncoded(true);
     }
 

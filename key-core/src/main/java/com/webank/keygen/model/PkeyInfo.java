@@ -17,35 +17,57 @@ package com.webank.keygen.model;
 
 import com.webank.keygen.crypto.EccOperations;
 import com.webank.keygen.enums.EccTypeEnums;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
- * PkeyInfo
+ * Self-described private key
  *
  * @Description: PkeyInfo
  * @author graysonzhang
  * @date 2019-09-08 01:39:48
  *
  */
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class PkeyInfo {
     private byte[] privateKey;
     private byte[] chainCode;
-
-    private String address;
     private String eccName;
 
-    public PubKeyInfo toPublic(EccTypeEnums eccTypeEnums, boolean compressed){
+    private PubKeyInfo publicKey;
+    private String address;
+
+    /**
+     * Get public key
+     * @return
+     */
+    public PubKeyInfo getPublicKey(){
+        if(publicKey == null){
+            publicKey = doBuildPubkeyInfo();
+        }
+        return this.publicKey;
+    }
+
+    /**
+     * Get address
+     * @return
+     */
+    public String getAddress(){
+        if(this.address == null){
+            this.address = getPublicKey().getAddress();
+        }
+        return address;
+    }
+
+    private PubKeyInfo doBuildPubkeyInfo(){
+        EccTypeEnums eccTypeEnums = EccTypeEnums.getEccByName(this.eccName);
         EccOperations eccOperations = new EccOperations(eccTypeEnums);
-        byte[] pubkeyBytes = eccOperations.generatePublicKeys(this.privateKey, compressed);
+        byte[] pubkeyBytes = eccOperations.generatePublicKeys(this.privateKey, false);
         return PubKeyInfo.builder().publicKey(pubkeyBytes)
                 .chaincode(this.chainCode)
+                .eccName(this.eccName)
                 .build();
     }
 
