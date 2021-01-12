@@ -17,17 +17,21 @@ package com.webank.keygen.utils;
 
 import com.webank.keygen.model.PkeyInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.openssl.PEMKeyPair;
 import org.web3j.crypto.Keys;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
-import java.security.*;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PublicKey;
 import java.security.interfaces.ECPrivateKey;
-import java.security.spec.*;
+import java.security.spec.ECParameterSpec;
+import java.security.spec.ECPoint;
+import java.security.spec.ECPublicKeySpec;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -67,60 +71,6 @@ public class KeyUtils {
 		bytes[0] = 0x04;
 		System.arraycopy(pubKey,0,bytes,1,pubKey.length);
 		return bytes;
-	}
-
-
-	public static KeyPair generateKeyPair(){
-		KeyPairGenerator keyPairGen = null;
-		KeyPair keyPair = null;
-		try {
-			keyPairGen = KeyPairGenerator.getInstance("RSA");
-			keyPairGen.initialize(2048);
-			keyPair =  keyPairGen.generateKeyPair();
-		} catch (NoSuchAlgorithmException e) {
-			log.error("generateKeyPair failed", e);
-		}
-		return keyPair;
-	}
-
-	public static PublicKey getRSAPublicKey(String key) throws Exception {
-		byte[] keyBytes = Base64.decodeBase64(key);
-		X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
-		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-		return keyFactory.generatePublic(keySpec);
-	}
-
-	public static PrivateKey getRSAPrivateKey(String key) throws Exception {
-		key = key.replace("-----BEGIN RSA PRIVATE KEY-----", "");
-		key = key.replace("-----END RSA PRIVATE KEY-----", "");
-		byte[] keyBytes = Base64.decodeBase64(key);
-		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
-		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-		return keyFactory.generatePrivate(keySpec);
-	}
-
-	public static PublicKey getRSAPublicKey(PrivateKey privateKey) throws Exception {
-		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-		RSAPrivateKeySpec spec = keyFactory.getKeySpec(privateKey,RSAPrivateKeySpec.class);
-		RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(spec.getModulus(),
-				BigInteger.valueOf(65537));
-		return keyFactory.generatePublic(publicKeySpec);
-	}
-
-	public static KeyPair getECKeyPair(String privateStr) throws Exception {
-		PEMKeyPair pemObject = (PEMKeyPair) CertUtils.readStringAsPEM(privateStr);
-		PrivateKey privateKey = KeyFactory.getInstance("EC").generatePrivate(
-				new PKCS8EncodedKeySpec(pemObject.getPrivateKeyInfo().getEncoded()));
-		PublicKey publicKey = getPublicKey((ECPrivateKey) privateKey);
-		return new KeyPair(publicKey,privateKey);
-	}
-
-	public static KeyPair getRSAKeyPair(String privateStr) throws Exception {
-		PEMKeyPair pemObject = (PEMKeyPair) CertUtils.readStringAsPEM(privateStr);
-		PrivateKey privateKey = KeyFactory.getInstance("RSA").generatePrivate(
-				new PKCS8EncodedKeySpec(pemObject.getPrivateKeyInfo().getEncoded()));
-		PublicKey publicKey = getRSAPublicKey(privateKey);
-		return new KeyPair(publicKey,privateKey);
 	}
 
 

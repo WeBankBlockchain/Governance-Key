@@ -14,7 +14,7 @@ public class Purpose44 {
         this.pathComponent = new PathComponent(previous, 44, true);
     }
 
-    public SceneType coinType(int index){
+    public SceneType sceneType(int index){
         return new SceneType(this.pathComponent, index);
     }
 
