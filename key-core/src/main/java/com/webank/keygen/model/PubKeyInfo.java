@@ -21,6 +21,10 @@ public class PubKeyInfo implements Cloneable {
 
     private String address;
 
+    /**
+     * Get address
+     * @return
+     */
     public String getAddress(){
         if(address == null){
             address = doComputeAddress();

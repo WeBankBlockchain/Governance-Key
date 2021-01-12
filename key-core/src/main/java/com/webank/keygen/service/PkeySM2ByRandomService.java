@@ -43,7 +43,12 @@ public class PkeySM2ByRandomService implements PrivateKeyCreator{
 	
     private static final int SEED_ITERATIONS = 2048;
     private static final int SEED_KEY_SIZE = 512;
-    
+
+    /**
+     * Generate sm2p256v1 private key.
+     * @return sm2p256v1 private key.
+     * @throws KeyGenException
+     */
     @Override
     public PkeyInfo generatePrivateKey() throws KeyGenException {
         

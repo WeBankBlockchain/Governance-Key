@@ -32,7 +32,7 @@ import static org.web3j.crypto.Hash.sha256;
 
 
 /**
- * PkeyService
+ * PkeyService . Generates secp256k1 private key.
  *
  * @Description: PkeyService
  * @author graysonzhang
@@ -44,6 +44,11 @@ public class PkeyByRandomService implements PrivateKeyCreator{
     private static final int SEED_ITERATIONS = 2048;
     private static final int SEED_KEY_SIZE = 512;
 
+    /**
+     * Generate secp256k1 private key.
+     * @return secp256k1 private key.
+     * @throws KeyGenException
+     */
     @Override
     public PkeyInfo generatePrivateKey() throws KeyGenException {
         

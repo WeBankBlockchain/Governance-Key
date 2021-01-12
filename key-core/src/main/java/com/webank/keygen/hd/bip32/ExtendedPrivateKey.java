@@ -35,7 +35,11 @@ public class ExtendedPrivateKey implements ChildKeyDerivable<ExtendedPrivateKey>
         this.publicKey = this.privKey.getPublicKey();
 }
 
-    //childPriv  = priv + hash(cc+index+pub)
+    /**
+     * Derive a sub private key by chaincode and child index
+     * @param childIdx ExtendedPrivateKey
+     * @return
+     */
     @Override
     public ExtendedPrivateKey deriveChild(int childIdx) {
         //Buffer contains "pubkey(33bytes)" + "childIdx(4bytes)"
@@ -68,10 +72,19 @@ public class ExtendedPrivateKey implements ChildKeyDerivable<ExtendedPrivateKey>
         return new ExtendedPrivateKey(pkeyInfo);
     }
 
+    /**
+     * Get corresponding public key
+     * @return ExtendedPublicKey
+     */
     public ExtendedPublicKey neuter(){
         return new ExtendedPublicKey(publicKey);
     }
 
+    /**
+     * Get public key of sub private key
+     * @param childIdx
+     * @return ExtendedPublicKey
+     */
     public ExtendedPublicKey deriveChildPubkey(int childIdx){
         return this.neuter().deriveChild(childIdx);
     }

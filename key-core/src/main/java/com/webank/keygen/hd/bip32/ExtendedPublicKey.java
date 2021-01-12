@@ -32,6 +32,12 @@ public class ExtendedPublicKey implements ChildKeyDerivable<ExtendedPublicKey>{
     }
 
     //pub + G*hash(cc+i+pub) = G*priv + G*hash(cc+i+pub) = G(priv + hash(cc+i+pub)) = G(childPriv)
+
+    /**
+     * Derive a child key by chaincode and child index
+     * @param childIdx
+     * @return ExtendedPublicKey
+     */
     @Override
     public ExtendedPublicKey deriveChild(int childIdx) {
         //Buffer contains "pubkey(33bytes)" + "childIdx(4bytes)"

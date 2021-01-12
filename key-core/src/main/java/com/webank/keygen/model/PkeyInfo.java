@@ -39,6 +39,10 @@ public class PkeyInfo {
     private PubKeyInfo publicKey;
     private String address;
 
+    /**
+     * Get public key
+     * @return
+     */
     public PubKeyInfo getPublicKey(){
         if(publicKey == null){
             publicKey = doBuildPubkeyInfo();
@@ -46,6 +50,10 @@ public class PkeyInfo {
         return this.publicKey;
     }
 
+    /**
+     * Get address
+     * @return
+     */
     public String getAddress(){
         if(this.address == null){
             this.address = getPublicKey().getAddress();

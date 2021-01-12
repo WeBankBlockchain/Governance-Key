@@ -33,7 +33,7 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
 /**
- * PkeyFormatService
+ * PkeyFormatService. Encrypt plain private key to keystore, p12, pem...
  *
  * @Description: PkeyFormatService
  * @author graysonzhang
