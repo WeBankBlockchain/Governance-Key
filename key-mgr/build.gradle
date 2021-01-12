@@ -80,7 +80,11 @@ sourceSets {
         }
     }
 }
-
+javadoc {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
 jar {
     enabled = true
     destinationDir file('dist')
