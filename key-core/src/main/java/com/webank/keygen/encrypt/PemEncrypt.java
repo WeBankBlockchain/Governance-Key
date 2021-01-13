@@ -59,6 +59,11 @@ import java.security.spec.PKCS8EncodedKeySpec;
  *
  */
 public class PemEncrypt{
+	static {
+		if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+			Security.addProvider(new BouncyCastleProvider());
+		}
+	}
 	/**
 	 * Convert plain private key to PEM format and save to disk
 	 */

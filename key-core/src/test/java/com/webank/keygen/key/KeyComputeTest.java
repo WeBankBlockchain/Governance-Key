@@ -1,6 +1,7 @@
 package com.webank.keygen.key;
 
 import com.webank.keygen.model.PkeyInfo;
+import com.webank.keygen.service.PkeyEncryptService;
 import com.webank.keygen.utils.KeyUtils;
 import com.webank.keysign.utils.Numeric;
 import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
@@ -39,6 +40,5 @@ public class KeyComputeTest {
         Assert.assertTrue(Arrays.equals(pkeyInfo.getPublicKey().getPublicKey(), Numeric.hexStringToByteArray(cryptoKeyPair.getHexPublicKey())));
 
     }
-
-
+    
 }
