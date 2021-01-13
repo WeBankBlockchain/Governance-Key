@@ -40,5 +40,5 @@ public class KeyComputeTest {
         Assert.assertTrue(Arrays.equals(pkeyInfo.getPublicKey().getPublicKey(), Numeric.hexStringToByteArray(cryptoKeyPair.getHexPublicKey())));
 
     }
-    
+
 }

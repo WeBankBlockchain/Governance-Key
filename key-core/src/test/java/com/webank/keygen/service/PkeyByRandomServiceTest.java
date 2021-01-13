@@ -36,11 +36,16 @@ public class PkeyByRandomServiceTest {
 
 	@Test
 	public void testGeneratePrivateKey() throws Exception{
-	    PkeyInfo pkeyInfo = service.generatePrivateKey();
+		PkeyInfo pkeyInfo = service.generatePrivateKey();
 		Assert.assertEquals(32, pkeyInfo.getPrivateKey().length);
 		Assert.assertTrue(null != pkeyInfo.getAddress() && !pkeyInfo.getAddress().isEmpty());
 		Assert.assertTrue(EccTypeEnums.SECP256K1.getEccName().equals(pkeyInfo.getEccName()));
 		Assert.assertNotNull(pkeyInfo.getChainCode());
+	}
+
+	@Test
+	public void testCreatePrivateKey() throws Exception{
+		PkeyInfo pkeyInfo = PkeyInfo.fromHexString("0xaa",EccTypeEnums.SECP256K1);
 	}
 
 }

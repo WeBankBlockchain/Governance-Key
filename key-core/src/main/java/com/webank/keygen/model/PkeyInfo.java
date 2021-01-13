@@ -26,6 +26,8 @@ import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
 import org.fisco.bcos.sdk.crypto.keypair.ECDSAKeyPair;
 import org.fisco.bcos.sdk.crypto.keypair.SM2KeyPair;
 
+import java.math.BigInteger;
+
 /**
  * Self-described private key
  *
@@ -66,6 +68,8 @@ public class PkeyInfo {
     }
 
     public static PkeyInfo fromHexString(String hexPrivateKey, EccTypeEnums eccTypeEnums) {
+        BigInteger pkeyBigIng = new BigInteger(1, Numeric.hexStringToByteArray(hexPrivateKey));
+        hexPrivateKey = Numeric.toHexString(KeyPresenter.asBytes(pkeyBigIng, 32));
         CryptoKeyPair cryptoKeyPair = getCryptoKeyPair(hexPrivateKey, eccTypeEnums);
         return fromCryptoKeypair(cryptoKeyPair);
     }
