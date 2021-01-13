@@ -17,7 +17,14 @@ package com.webank.keygen.model;
 
 import com.webank.keygen.crypto.EccOperations;
 import com.webank.keygen.enums.EccTypeEnums;
+import com.webank.keygen.utils.KeyPresenter;
+import com.webank.keygen.utils.KeyUtils;
+import com.webank.keysign.utils.Numeric;
+import com.webank.keysign.utils.RandomUtils;
 import lombok.*;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
+import org.fisco.bcos.sdk.crypto.keypair.ECDSAKeyPair;
+import org.fisco.bcos.sdk.crypto.keypair.SM2KeyPair;
 
 /**
  * Self-described private key
@@ -30,14 +37,38 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 public class PkeyInfo {
+    @Getter
+    @Setter
     private byte[] privateKey;
+    @Getter
+    @Setter
     private byte[] chainCode;
+    @Getter
+    @Setter
     private String eccName;
 
     private PubKeyInfo publicKey;
     private String address;
+
+    public static PkeyInfo fromCryptoKeypair(CryptoKeyPair cryptoKeyPair) {
+        byte[] chaincode = RandomUtils.randomBytes(32);
+
+        return fromCryptoKeypair(cryptoKeyPair, chaincode);
+    }
+
+    public static PkeyInfo fromCryptoKeypair(CryptoKeyPair cryptoKeyPair, byte[] chaincode) {
+        PkeyInfo pkeyInfo = new PkeyInfo();
+        pkeyInfo.setPrivateKey(KeyPresenter.asBytes(cryptoKeyPair.getHexPrivateKey()));
+        pkeyInfo.setChainCode(chaincode);
+        pkeyInfo.setEccName(KeyUtils.getEccType(cryptoKeyPair));
+        return pkeyInfo;
+    }
+
+    public static PkeyInfo fromHexString(String hexPrivateKey, EccTypeEnums eccTypeEnums) {
+        CryptoKeyPair cryptoKeyPair = getCryptoKeyPair(hexPrivateKey, eccTypeEnums);
+        return fromCryptoKeypair(cryptoKeyPair);
+    }
 
     /**
      * Get public key
@@ -61,10 +92,19 @@ public class PkeyInfo {
         return address;
     }
 
+    private static CryptoKeyPair getCryptoKeyPair(String hexPrivateKey, EccTypeEnums eccTypeEnums){
+        if(eccTypeEnums == EccTypeEnums.SECP256K1){
+            return new ECDSAKeyPair().createKeyPair(hexPrivateKey);
+        }
+        else{
+            return new SM2KeyPair().createKeyPair(hexPrivateKey);
+        }
+    }
+
     private PubKeyInfo doBuildPubkeyInfo(){
         EccTypeEnums eccTypeEnums = EccTypeEnums.getEccByName(this.eccName);
-        EccOperations eccOperations = new EccOperations(eccTypeEnums);
-        byte[] pubkeyBytes = eccOperations.generatePublicKeys(this.privateKey, false);
+        CryptoKeyPair cryptoKeyPair = KeyUtils.getCryptKeyPair(privateKey, eccTypeEnums);
+        byte[] pubkeyBytes = Numeric.hexStringToByteArray(cryptoKeyPair.getHexPublicKey());
         return PubKeyInfo.builder().publicKey(pubkeyBytes)
                 .chaincode(this.chainCode)
                 .eccName(this.eccName)

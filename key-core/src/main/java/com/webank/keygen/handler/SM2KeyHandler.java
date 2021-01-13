@@ -16,13 +16,17 @@
 package com.webank.keygen.handler;
 
 import com.webank.keygen.constants.SM2Constants;
+import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.exception.KeyGenException;
+import com.webank.keygen.utils.KeyPresenter;
 import com.webank.keygen.utils.KeyUtils;
 import com.webank.wedpr.crypto.CryptoResult;
 import com.webank.wedpr.crypto.NativeInterface;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.math.ec.ECPoint;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
+import org.fisco.bcos.sdk.crypto.keypair.SM2KeyPair;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.utils.Numeric;
 
@@ -40,61 +44,13 @@ import java.util.Arrays;
  */
 @Slf4j
 public class SM2KeyHandler {
-
-	private static SecureRandom random;
-	private static KeyPairGenerator keyPairGenerator;
-	private static ECGenParameterSpec spec;
-	
-	static {
-	    if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
-	    	Security.addProvider(new BouncyCastleProvider());
-	    }
-		random = new SecureRandom();
-		try {
-			spec = new ECGenParameterSpec("sm2p256v1");
-			keyPairGenerator = KeyPairGenerator.getInstance("ECDSA", "BC");
- 	        keyPairGenerator.initialize(spec, random);
-		} catch (Exception e) {
-			log.error("Error initlizing SM2KeyHandler ", e);
-			throw new RuntimeException(e);
-		} 	
-	}
-	
-	
-    public static ECKeyPair generateSM2KeyPair() throws KeyGenException {
-		CryptoResult result = NativeInterface.sm2keyPair();
-		if(result.getWedprErrorMessage() != null){
-			log.error("Failed to generate sm2 keypair: {}",result.getWedprErrorMessage());
-			throw new KeyGenException(result.getWedprErrorMessage());
-		}
-		BigInteger privateVal = new BigInteger(result.getPrivteKey(), 16);
-		byte[] pubkeyBytes = KeyUtils.ensure64bytesPubkey(Numeric.hexStringToByteArray(result.getPublicKey()));
-
-		BigInteger publicVal = new BigInteger(1, pubkeyBytes);
-		return new ECKeyPair(privateVal, publicVal);
+    public static CryptoKeyPair generateSM2KeyPair() {
+		return new SM2KeyPair().generateKeyPair();
     }
     
-    public static ECKeyPair create(byte[] privKeyBytes) {
-		//The pubkey will be 64 byte long
-    	BigInteger privKeyBigInt = Numeric.toBigInt(privKeyBytes);
-    	byte[] pubKeyBytes = SM2PrivateKeyToPublicKey(privKeyBytes);
-    	BigInteger pubKeyBigInt = Numeric.toBigInt(pubKeyBytes);
-    	ECKeyPair ecKeyPair = new ECKeyPair(privKeyBigInt, pubKeyBigInt);
-    	return ecKeyPair;
+    public static CryptoKeyPair create(byte[] privKeyBytes) {
+		return KeyUtils.getCryptKeyPair(privKeyBytes, EccTypeEnums.SM2P256V1);
     }
-    
-	/**
-	 * Return 64 bytes encoded public key
-	 * @param privateKey
-	 * @return
-	 */
-	public static byte[] SM2PrivateKeyToPublicKey(byte[] privateKey) {
-		BigInteger d = Numeric.toBigInt(privateKey);
-		ECPoint g = SM2Constants.GPOINT;
-		ECPoint q = g.multiply(d);
-		byte[] data = q.getEncoded(false);
-		return Arrays.copyOfRange(data, 1, data.length);
-	}
 }
 
 

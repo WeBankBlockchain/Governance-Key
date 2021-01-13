@@ -17,6 +17,7 @@ package com.webank.keygen.service;
 
 import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.model.PkeyInfo;
+import com.webank.keygen.utils.KeyUtils;
 import com.webank.keysign.utils.Numeric;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
@@ -73,13 +74,14 @@ public class PKeyByMnemonicServiceTest {
 		PkeyInfo pkeyInfo2 = service.generatePrivateKeyByMnemonic(mnemonicStr, "123456", EccTypeEnums.SECP256K1);
 
 		Assert.assertTrue(Objects.equals("59cac30eff70215cc1fd7567f63589efd5025421a925deeebb09f4d5a33b4dde", Numeric.toHexString(pkeyInfo1.getPrivateKey())));
-		Assert.assertTrue(Objects.equals("0xd833d9616afee92a27fef402965769a81756b7cb", pkeyInfo1.getAddress()));
+		Assert.assertTrue(KeyUtils.isAddressEquals("096d6ecfd925ab201c91fcb69be81349f3e77604", pkeyInfo1.getAddress()));
 		Assert.assertTrue(Objects.equals("2751afb3607a68f39d80cf2535c676a355d57cae812657aad10be39f2ebd113b", Numeric.toHexString(pkeyInfo1.getChainCode())));
 		Assert.assertTrue(Objects.equals("sm2p256v1", pkeyInfo1.getEccName()));
 
 
 		Assert.assertTrue(Objects.equals("59cac30eff70215cc1fd7567f63589efd5025421a925deeebb09f4d5a33b4dde", Numeric.toHexString(pkeyInfo2.getPrivateKey())));
-		Assert.assertTrue(Objects.equals("0x4bf93852e6b29003d21aa280cdfeca6f3d2e60d7", pkeyInfo2.getAddress()));
+		String address = pkeyInfo2.getAddress();
+		Assert.assertTrue(KeyUtils.isAddressEquals("4bf93852e6b29003d21aa280cdfeca6f3d2e60d7",address));
 		Assert.assertTrue(Objects.equals("2751afb3607a68f39d80cf2535c676a355d57cae812657aad10be39f2ebd113b", Numeric.toHexString(pkeyInfo2.getChainCode())));
 		Assert.assertTrue(Objects.equals("secp256k1", pkeyInfo2.getEccName()));
 

@@ -25,6 +25,7 @@ import com.webank.keygen.utils.KeyUtils;
 import com.webank.keygen.utils.SecureRandomUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.MnemonicUtils;
 import org.web3j.utils.Numeric;
@@ -96,9 +97,8 @@ public class PkeyByMnemonicService{
         EccOperations eccOperations = new EccOperations(eccType);
         eccOperations.verifyPrivateKey(new BigInteger(1, pkey));
 
-    	ECKeyPair ecKeyPair = new EccOperations(eccType).getKeyPair(pkey);
+    	CryptoKeyPair ecKeyPair = new EccOperations(eccType).getKeyPair(pkey);
 
-    	return KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(),
-                eccType.getEccName(), chainCode);
+    	return PkeyInfo.fromCryptoKeypair(ecKeyPair, chainCode);
     }
 }

@@ -16,6 +16,7 @@
 package com.webank.keygen.encrypt;
 
 
+import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.enums.KeyFileTypeEnums;
 import com.webank.keygen.model.DecryptResult;
 import com.webank.keygen.model.ECCPrivateKey;
@@ -25,6 +26,7 @@ import com.webank.keygen.utils.KeyUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
 import org.web3j.utils.Numeric;
 
 import java.io.*;
@@ -70,20 +72,17 @@ public class P12Encrypt{
 	 * @throws NoSuchAlgorithmException 
 	 * @throws NoSuchProviderException 
 	 */
-    public static String storePrivateKey(String password, byte[] privateKey, String eccTypeName,
-    		String address, String destinationDirectory) throws Exception{
-    	if(privateKey == null) {
-    		throw new IllegalArgumentException("privateKey");
-    	}
-		String encryptKey = encryptPrivateKey(password, privateKey, eccTypeName);
-		return storePrivateKey(encryptKey, address, destinationDirectory);
+    public static String storePrivateKey(String password, byte[] privateKey, EccTypeEnums eccTypeEnums, String destinationDirectory) throws Exception{
+		CryptoKeyPair cryptoKeyPair = KeyUtils.getCryptKeyPair(privateKey, eccTypeEnums);
+		String encryptKey = encryptPrivateKey(password, privateKey, eccTypeEnums);
+		String fileName = cryptoKeyPair.getAddress()+KeyFileTypeEnums.P12_FILE.getKeyFilePostfix();
+		return storePrivateKey(encryptKey, fileName, destinationDirectory);
     }
 
 	public static String storePrivateKey(String encryptKey,
-										 String address, String destinationDirectory) throws Exception{
-		address = address.startsWith("0x")?address:"0x"+address;
+										 String fileName, String destinationDirectory){
 		String filePath = FileOperationUtils.generateFilePath(
-				address+KeyFileTypeEnums.P12_FILE.getKeyFilePostfix(),
+				fileName,
 				destinationDirectory);
 		FileOperationUtils.writeBinary(filePath, encryptKey);
 		return filePath;
@@ -96,7 +95,7 @@ public class P12Encrypt{
      * @return Encrypted data
      * @throws Exception
      */
-    public static String encryptPrivateKey(String password, byte[] privateKey, String eccTypeName) throws Exception{
+    public static String encryptPrivateKey(String password, byte[] privateKey, EccTypeEnums eccTypeEnums) throws Exception{
     	if(privateKey == null || privateKey.length != 32) {
     		throw new IllegalArgumentException("privateKey");
     	}
@@ -105,7 +104,7 @@ public class P12Encrypt{
     	Certificate[] certs = new Certificate[] {dummyCert};
     	KeyStore ks = KeyStore.getInstance("PKCS12", "BC");
     	ks.load(null);
-    	ks.setKeyEntry(NAME, new ECCPrivateKey(privateKey,eccTypeName), passCharArray, certs);
+    	ks.setKeyEntry(NAME, new ECCPrivateKey(privateKey,eccTypeEnums.getEccName()), passCharArray, certs);
     	ks.store(os, passCharArray);
     	os.close();
     	return Numeric.toHexString(os.toByteArray());

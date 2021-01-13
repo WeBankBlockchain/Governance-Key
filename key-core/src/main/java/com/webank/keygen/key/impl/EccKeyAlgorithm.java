@@ -1,6 +1,9 @@
 package com.webank.keygen.key.impl;
 
+import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.key.KeyComputeAlgorithm;
+import com.webank.keygen.utils.KeyUtils;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
 import org.web3j.crypto.Keys;
 import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
@@ -18,15 +21,13 @@ import java.math.BigInteger;
 public class EccKeyAlgorithm implements KeyComputeAlgorithm {
 	@Override
 	public String computeAddress(byte[] privateKey) {
-		BigInteger pubkey = Sign.publicKeyFromPrivate(Numeric.toBigInt(privateKey));
-		String address = Keys.getAddress(pubkey);
-	    if(!address.contains("0x") && !address.contains("0X")) return "0x" + address;
-	    return address;
+		CryptoKeyPair cryptoKeyPair = KeyUtils.getCryptKeyPair(privateKey, EccTypeEnums.SECP256K1);
+		return cryptoKeyPair.getAddress();
 	}
 
     @Override
     public String computePublicKey(byte[] privateKey) {
-        BigInteger pubkey = Sign.publicKeyFromPrivate(Numeric.toBigInt(privateKey));
-        return Numeric.toHexStringWithPrefix(pubkey);
+		CryptoKeyPair cryptoKeyPair = KeyUtils.getCryptKeyPair(privateKey, EccTypeEnums.SECP256K1);
+		return cryptoKeyPair.getHexPublicKey();
     }
 }

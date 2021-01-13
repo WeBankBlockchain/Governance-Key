@@ -6,6 +6,8 @@ import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.model.PkeyInfo;
 import com.webank.keygen.model.PubKeyInfo;
 import com.webank.keygen.utils.ExtendedKeyUtil;
+import com.webank.keygen.utils.KeyUtils;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
@@ -64,6 +66,8 @@ public class ExtendedPublicKey implements ChildKeyDerivable<ExtendedPublicKey>{
         if (Ili.compareTo(eccOperations.getN()) >= 0 || childPoint == null) {
             return deriveChild(childIdx + 1);
         }
+
+        CryptoKeyPair cryptoKeyPair = KeyUtils.getCryptKeyPair(this.eccTypeEnums);
         PubKeyInfo pkeyInfo = PubKeyInfo.builder()
                 .publicKey(childPoint)
                 .chaincode(Ir)

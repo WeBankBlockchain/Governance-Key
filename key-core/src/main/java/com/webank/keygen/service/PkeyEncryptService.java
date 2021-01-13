@@ -24,6 +24,7 @@ import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.enums.KeyFileTypeEnums;
 import com.webank.keygen.exception.KeyGenException;
 import com.webank.keygen.utils.KeyStoreUtils;
+import org.web3j.crypto.CipherException;
 
 import java.io.IOException;
 import java.security.KeyStoreException;
@@ -46,16 +47,16 @@ public class PkeyEncryptService {
      * Encrypt private key with keystore format
      * @param password
      * @param privateKey
-     * @param address
+     * @param eccTypeEnums
      * @param destinationDirectory
      * @throws JsonGenerationException
      * @throws JsonMappingException
      * @throws KeyGenException
      * @throws IOException
      */
-    public void encryptKeyStoreFormat(String password, byte[] privateKey, String address, String destinationDirectory)
+    public void encryptKeyStoreFormat(String password, byte[] privateKey, EccTypeEnums eccTypeEnums, String destinationDirectory)
             throws JsonGenerationException, JsonMappingException, KeyGenException, IOException {
-        KeyStoreEncrypt.storeEncryptPrivateKeyToFile(password, privateKey, address, destinationDirectory);
+        KeyStoreEncrypt.storeEncryptPrivateKeyToFile(password, privateKey, eccTypeEnums, destinationDirectory);
     }
 
     /**
@@ -65,7 +66,7 @@ public class PkeyEncryptService {
      * @return
      * @throws IOException
      */
-    public byte[] decryptKeystoreFormat(String password, String filePath) throws IOException {
+    public byte[] decryptKeystoreFormat(String password, String filePath) throws Exception {
         if (!KeyStoreUtils.isValidFile(filePath, KeyFileTypeEnums.KEYSTORE_FILE))
             return null;
         return KeyStoreEncrypt.decryptPrivateKeyByFile(password, filePath);
@@ -75,7 +76,7 @@ public class PkeyEncryptService {
      * Encrypt private key with p12 format
      * @param password
      * @param privateKey
-     * @param address
+     * @param eccTypeEnums
      * @param destinationDirectory
      * @throws KeyStoreException
      * @throws NoSuchAlgorithmException
@@ -84,16 +85,10 @@ public class PkeyEncryptService {
      * @throws IOException
      * @throws KeyGenException
      */
-    public void encryptP12Format(String password, byte[] privateKey, String eccTypeName, String address,
-            String destinationDirectory) throws KeyStoreException, NoSuchAlgorithmException, CertificateException,
-            NoSuchProviderException, IOException, KeyGenException {
-        try{
-            P12Encrypt.storePrivateKey(password, privateKey, eccTypeName, address,
+    public void encryptP12Format(String password, byte[] privateKey, EccTypeEnums eccTypeEnums,
+            String destinationDirectory) throws Exception{
+            P12Encrypt.storePrivateKey(password, privateKey, eccTypeEnums,
                     destinationDirectory);
-        }
-        catch (Exception ex){
-            throw new KeyGenException(ex.getMessage());
-        }
     }
 
     /**
@@ -108,8 +103,7 @@ public class PkeyEncryptService {
      * @throws NoSuchProviderException
      * @throws IOException
      */
-    public byte[] decryptP12Format(String password, String filePath) throws UnrecoverableKeyException,
-            NoSuchAlgorithmException, CertificateException, KeyStoreException, NoSuchProviderException, IOException {
+    public byte[] decryptP12Format(String password, String filePath) throws Exception {
         if (!KeyStoreUtils.isValidFile(filePath, KeyFileTypeEnums.P12_FILE))
             return null;
         return P12Encrypt.decryptPrivateKeyByFile(password, filePath);
@@ -118,14 +112,14 @@ public class PkeyEncryptService {
     /**
      * Encrypt private key with pem format
      * @param privateKey
-     * @param address
+     * @param eccTypeEnums
      * @param destinationDirectory
      * @throws IOException
      * @throws KeyGenException
      */
-    public void encryptPEMFormat(byte[] privateKey, int eccType, String address, String destinationDirectory)
+    public void encryptPEMFormat(byte[] privateKey, EccTypeEnums eccTypeEnums, String destinationDirectory)
             throws Exception {
-        PemEncrypt.storePrivateKey(privateKey, EccTypeEnums.getEccByType(eccType), address, destinationDirectory);
+        PemEncrypt.storePrivateKey(privateKey,eccTypeEnums, destinationDirectory);
     }
 
     /**

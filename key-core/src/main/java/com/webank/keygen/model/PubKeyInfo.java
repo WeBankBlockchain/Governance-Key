@@ -2,8 +2,10 @@ package com.webank.keygen.model;
 
 import com.webank.keygen.crypto.EccOperations;
 import com.webank.keygen.enums.EccTypeEnums;
+import com.webank.keygen.utils.KeyUtils;
 import com.webank.keysign.utils.Numeric;
 import lombok.*;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
 import org.web3j.crypto.Keys;
 
 import java.math.BigInteger;
@@ -11,33 +13,19 @@ import java.util.Arrays;
 import java.util.Objects;
 
 @Builder
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class PubKeyInfo implements Cloneable {
     private byte[] publicKey;
     private byte[] chaincode;
     private String eccName;
 
-    private String address;
 
-    /**
-     * Get address
-     * @return
-     */
     public String getAddress(){
-        if(address == null){
-            address = doComputeAddress();
-        }
-        return address;
-    }
-
-    private String doComputeAddress(){
-        byte[] keyBytes = this.publicKey;
-        if(keyBytes.length == 65){
-            keyBytes = Arrays.copyOfRange(keyBytes, 1, keyBytes.length);
-        }
-        return Numeric.toHexStringWithPrefix(new BigInteger(1, Keys.getAddress(keyBytes)));
+        EccTypeEnums eccTypeEnums = EccTypeEnums.getEccByName(eccName);
+        CryptoKeyPair cryptoKeyPair = KeyUtils.getCryptKeyPair(eccTypeEnums);
+        return Numeric.toHexString(cryptoKeyPair.getAddress(Arrays.copyOfRange(publicKey,1,publicKey.length)));
     }
 
     @Override
@@ -56,6 +44,8 @@ public class PubKeyInfo implements Cloneable {
         int result = 17;
         result = 31 * result + Arrays.hashCode(publicKey);
         result = 31 * result + Arrays.hashCode(chaincode);
+        result = 31 * result + eccName.hashCode();
+
         return result;
     }
 

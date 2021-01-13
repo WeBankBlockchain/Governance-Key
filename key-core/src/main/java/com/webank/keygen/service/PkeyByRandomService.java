@@ -25,6 +25,8 @@ import com.webank.keysign.utils.RandomUtils;
 import org.bouncycastle.crypto.digests.SHA512Digest;
 import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
 import org.bouncycastle.crypto.params.KeyParameter;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
+import org.fisco.bcos.sdk.crypto.keypair.ECDSAKeyPair;
 import org.web3j.crypto.ECKeyPair;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -51,10 +53,8 @@ public class PkeyByRandomService implements PrivateKeyCreator{
      */
     @Override
     public PkeyInfo generatePrivateKey() throws KeyGenException {
-        
-        ECKeyPair ecKeyPair = ECKeyHandler.generateECKeyPair();
-        byte[] chaincode = RandomUtils.randomBytes(32);
-        return KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(), EccTypeEnums.SECP256K1.getEccName(), chaincode);
+        CryptoKeyPair cryptoKeyPair = new ECDSAKeyPair().generateKeyPair();
+        return PkeyInfo.fromCryptoKeypair(cryptoKeyPair);
     }
 
     //Please refer to PkeyHDDeriveService

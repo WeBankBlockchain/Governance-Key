@@ -15,11 +15,15 @@
  */
 package com.webank.keygen.handler;
 
+import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.exception.KeyGenException;
 import com.webank.keygen.utils.KeyUtils;
 import com.webank.wedpr.crypto.CryptoResult;
 import com.webank.wedpr.crypto.NativeInterface;
 import lombok.extern.slf4j.Slf4j;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
+import org.fisco.bcos.sdk.crypto.keypair.ECDSAKeyPair;
+import org.fisco.bcos.sdk.crypto.keypair.SM2KeyPair;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.utils.Numeric;
 
@@ -37,21 +41,12 @@ import java.math.BigInteger;
 @Slf4j
 public class ECKeyHandler {
     
-    public static ECKeyPair generateECKeyPair() throws KeyGenException {
-		CryptoResult result = NativeInterface.secp256k1keyPair();
-		if(result.getWedprErrorMessage() != null){
-			log.error("Failed to generate sm2 keypair: {}",result.getWedprErrorMessage());
-			throw new KeyGenException(result.getWedprErrorMessage());
-		}
-		BigInteger privateVal = new BigInteger(result.getPrivteKey(), 16);
-		byte[] pubkeyBytes = KeyUtils.ensure64bytesPubkey(Numeric.hexStringToByteArray(result.getPublicKey()));
-
-		BigInteger publicVal = new BigInteger(1, pubkeyBytes);
-		return new ECKeyPair(privateVal, publicVal);
+    public static CryptoKeyPair generateECKeyPair() {
+		return new ECDSAKeyPair().generateKeyPair();
     }
 
-	public static ECKeyPair create(byte[] privKeyBytes) throws KeyGenException {
+	public static CryptoKeyPair create(byte[] privKeyBytes) {
     	//The pubkey will be 64 byte long
-		return ECKeyPair.create(privKeyBytes);
+		return KeyUtils.getCryptKeyPair(privKeyBytes, EccTypeEnums.SECP256K1);
 	}
 }

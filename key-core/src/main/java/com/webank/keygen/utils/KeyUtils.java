@@ -15,10 +15,16 @@
  */
 package com.webank.keygen.utils;
 
+import com.webank.keygen.enums.EccTypeEnums;
+import com.webank.keygen.handler.ECKeyHandler;
+import com.webank.keygen.handler.SM2KeyHandler;
 import com.webank.keygen.model.PkeyInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
+import org.fisco.bcos.sdk.crypto.keypair.ECDSAKeyPair;
+import org.fisco.bcos.sdk.crypto.keypair.SM2KeyPair;
 import org.web3j.crypto.Keys;
 import org.web3j.utils.Numeric;
 
@@ -44,11 +50,43 @@ import java.util.Collections;
 @Slf4j
 public class KeyUtils {
 
-	public static byte[] ensure64bytesPubkey(byte[] pubkeBytes){
-		if(pubkeBytes.length == 65){
-			return Arrays.copyOfRange(pubkeBytes, 1, pubkeBytes.length);
+	public static CryptoKeyPair getCryptKeyPair(EccTypeEnums eccTypeEnums){
+		if(CryptoKeyPair.ECDSA_CURVE_NAME.equals(eccTypeEnums.getEccName())){
+			return new ECDSAKeyPair().generateKeyPair();
 		}
-		return pubkeBytes;
+		else if(CryptoKeyPair.SM2_CURVE_NAME.equals(eccTypeEnums.getEccName())){
+			return new SM2KeyPair().generateKeyPair();
+		}
+		else{
+			throw new IllegalArgumentException("unrecognised ecc type" + eccTypeEnums.getEccName());
+		}
+	}
+
+	public static CryptoKeyPair getCryptKeyPair(byte[] privateKey, EccTypeEnums eccTypeEnums){
+		if(CryptoKeyPair.ECDSA_CURVE_NAME.equals(eccTypeEnums.getEccName())){
+			return new ECDSAKeyPair().createKeyPair(KeyPresenter.asBigInteger(privateKey));
+		}
+		else if(CryptoKeyPair.SM2_CURVE_NAME.equals(eccTypeEnums.getEccName())){
+			return new SM2KeyPair().createKeyPair(KeyPresenter.asBigInteger(privateKey));
+		}
+		else{
+			throw new IllegalArgumentException("unrecognised ecc type" + eccTypeEnums.getEccName());
+		}
+	}
+
+	public static String getEccType(CryptoKeyPair cryptoKeyPair){
+		if(cryptoKeyPair instanceof ECDSAKeyPair){
+			return EccTypeEnums.SECP256K1.getEccName();
+		}
+		else{
+			return EccTypeEnums.SM2P256V1.getEccName();
+		}
+	}
+
+	public static boolean isAddressEquals(String address1, String address2){
+		byte[] addr1 = Numeric.hexStringToByteArray(address1);
+		byte[] addr2 = Numeric.hexStringToByteArray(address2);
+		return Arrays.equals(addr1, addr2);
 	}
 
 	public static PkeyInfo createPkeyInfo(BigInteger privateKey, BigInteger publicKey, String eccName) {

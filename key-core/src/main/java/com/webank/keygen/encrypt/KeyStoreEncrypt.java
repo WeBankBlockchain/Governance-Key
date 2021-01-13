@@ -27,9 +27,12 @@ import com.webank.keygen.key.impl.Sm2KeyAlgorithm;
 import com.webank.keygen.model.DecryptResult;
 import com.webank.keygen.utils.FileOperationUtils;
 import com.webank.keygen.utils.JacksonUtils;
+import com.webank.keygen.utils.KeyUtils;
+import com.webank.keygen.wallet.KeystoreWalletAdaptor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
 import org.web3j.crypto.*;
 import org.web3j.utils.Numeric;
 
@@ -62,13 +65,16 @@ public class KeyStoreEncrypt {
      * @throws JsonMappingException 
      * @throws JsonGenerationException 
      */
-    public static String storeEncryptPrivateKeyToFile(String password, byte[] privateKey, String address, String destinationDirectory) throws KeyGenException, JsonGenerationException, JsonMappingException, IOException{
+    public static String storeEncryptPrivateKeyToFile(String password, byte[] privateKey, EccTypeEnums eccTypeEnums, String destinationDirectory) throws KeyGenException, JsonGenerationException, JsonMappingException, IOException{
         
         try {
+            CryptoKeyPair cryptoKeyPair = KeyUtils.getCryptKeyPair(privateKey, eccTypeEnums);
             //Encrypt key
-            String encryptKey = encryptPrivateKey(password, privateKey, address);
+            String encryptKey = encryptPrivateKey(password, privateKey, eccTypeEnums);
+            //filename
+            String filename = buildDefaultFilename(cryptoKeyPair.getAddress());
             //Store private key
-            return storeEncryptPrivateKeyToFile(encryptKey, address, destinationDirectory);
+            return storeEncryptPrivateKeyToFile(encryptKey, filename, destinationDirectory);
         } catch (CipherException e) {
             log.info("encrypt private key error", e);
             return null;
@@ -78,16 +84,12 @@ public class KeyStoreEncrypt {
     /**
      *
      * @param encryptKey
-     * @param address
+     * @param fileName file name
      * @param destinationDirectory
      * @throws KeyGenException
      */
-    public static String storeEncryptPrivateKeyToFile(String encryptKey, String address, String destinationDirectory) throws KeyGenException {
+    public static String storeEncryptPrivateKeyToFile(String encryptKey, String fileName, String destinationDirectory) throws KeyGenException {
         //Generate file path
-        address = address.startsWith("0x")?address:"0x"+address;
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("'UTC--'yyyy-MM-dd'T'HH-mm-ss.nVV'--'");
-        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
-        String fileName = now.format(format) + address + KeyFileTypeEnums.KEYSTORE_FILE.getKeyFilePostfix();
         String filePath = FileOperationUtils.generateFilePath(fileName, destinationDirectory);
         //Write to path
         FileOperationUtils.writeFile(filePath, encryptKey);
@@ -102,17 +104,10 @@ public class KeyStoreEncrypt {
      * @throws KeyGenException
      * @throws CipherException
      */
-    public static String encryptPrivateKey(String password, byte[] privateKey, String address) throws KeyGenException, CipherException{
-        String privateStr = Numeric.toHexString(privateKey);
-        if (StringUtils.isBlank(privateStr) || !WalletUtils.isValidPrivateKey(privateStr)) {
-            log.error("private key format is not right ");
-            throw new KeyGenException(ExceptionCodeEnums.PRIVATEKEY_FORMAT_ERROR);
-        }
-        //ECKeyPair is bind to secp256k1, so need to set the address to support gm
-        ECKeyPair ecKeyPair = ECKeyPair.create(Numeric.toBigInt(privateKey));
-        WalletFile file = Wallet.createStandard(password, ecKeyPair);
-        file.setAddress(address);
-        return JacksonUtils.toJson(file);
+    public static String encryptPrivateKey(String password, byte[] privateKey, EccTypeEnums eccTypeEnums) throws CipherException{
+        CryptoKeyPair cryptoKeyPair = KeyUtils.getCryptKeyPair(privateKey, eccTypeEnums);
+        WalletFile walletFile = KeystoreWalletAdaptor.createStandard(password, cryptoKeyPair);
+        return JacksonUtils.toJson(walletFile);
     }
 
     /**    
@@ -125,42 +120,20 @@ public class KeyStoreEncrypt {
      * @throws JsonMappingException 
      * @throws JsonParseException 
      */
-    public static byte[] decryptPrivateKey(String password, String encryptPrivateKey) throws JsonParseException, JsonMappingException, IOException{
-        
+    public static byte[] decryptPrivateKey(String password, String encryptPrivateKey) throws CipherException{
         WalletFile walletFile = JacksonUtils.strToObject(encryptPrivateKey, WalletFile.class);
-        ECKeyPair ecKeyPair = null;
-        try {
-            ecKeyPair = Wallet.decrypt(password, walletFile);
-            return Numeric.toBytesPadded(ecKeyPair.getPrivateKey(), 32);
-        } catch (CipherException e) {
-            log.info("decrypt private key error", e);
-            return null;
-        }
+        CryptoKeyPair cryptoKeyPair = KeystoreWalletAdaptor.decrypt(password, walletFile);
+        return Numeric.hexStringToByteArray(cryptoKeyPair.getHexPrivateKey());
     }
 
-    public static DecryptResult decryptFully(String password, String encryptPrivateKey) throws Exception {
-        byte[] rawKey = decryptPrivateKey(password, encryptPrivateKey);
-        String eccType = resolveEcc(rawKey, encryptPrivateKey);
-        return new DecryptResult(rawKey, eccType);
+    public static DecryptResult decryptWithEccType(String password, String encryptPrivateKey) throws Exception {
+        WalletFile walletFile = JacksonUtils.strToObject(encryptPrivateKey, WalletFile.class);
+        CryptoKeyPair cryptoKeyPair = KeystoreWalletAdaptor.decrypt(password, walletFile);
+        return new DecryptResult(
+                Numeric.hexStringToByteArray(cryptoKeyPair.getHexPrivateKey()),
+                KeyUtils.getEccType(cryptoKeyPair));
     }
 
-    private static EccKeyAlgorithm eccKeyAlgorithm = new EccKeyAlgorithm();
-    private static Sm2KeyAlgorithm sm2KeyAlgorithm = new Sm2KeyAlgorithm();
-    private static String resolveEcc(byte[] rawKey, String encryptPrivateKey){
-        Map encryptedObj = JacksonUtils.fromJson(encryptPrivateKey, Map.class);
-        String addrInKey = encryptedObj.get("address").toString();
-        String addr = eccKeyAlgorithm.computeAddress(rawKey);
-        String eccType = null;
-        if (addrInKey.equals(addr)) {
-            eccType = EccTypeEnums.SECP256K1.getEccName();
-        }
-        addr = sm2KeyAlgorithm.computeAddress(rawKey);
-        if (addrInKey.equals(addr)) {
-            eccType = EccTypeEnums.SM2P256V1.getEccName();
-        }
-        return eccType;
-    }
-    
     /**
      * Decrypt key from file
      * @param password
@@ -168,9 +141,16 @@ public class KeyStoreEncrypt {
      * @return
      * @throws IOException
      */
-    public static byte[] decryptPrivateKeyByFile(String password, String filePath) throws IOException {
+    public static byte[] decryptPrivateKeyByFile(String password, String filePath) throws IOException,CipherException {
     	File file = FileOperationUtils.getFile(filePath);
         String encryptPrivateKey = FileUtils.readFileToString(file, "UTF-8");
         return decryptPrivateKey(password, encryptPrivateKey);
+    }
+
+    private static String buildDefaultFilename(String address){
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("'UTC--'yyyy-MM-dd'T'HH-mm-ss.nVV'--'");
+        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
+        String fileName = now.format(format) + address + KeyFileTypeEnums.KEYSTORE_FILE.getKeyFilePostfix();
+        return fileName;
     }
 }

@@ -1,10 +1,16 @@
 package com.webank.keygen.crypto;
 
 import com.webank.keygen.enums.EccTypeEnums;
+import com.webank.keygen.handler.ECKeyHandler;
 import com.webank.keygen.handler.SM2KeyHandler;
+import com.webank.keygen.utils.KeyPresenter;
+import com.webank.keygen.utils.KeyUtils;
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.crypto.ec.CustomNamedCurves;
 import org.bouncycastle.math.ec.ECPoint;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
+import org.fisco.bcos.sdk.crypto.keypair.ECDSAKeyPair;
+import org.fisco.bcos.sdk.crypto.keypair.SM2KeyPair;
 import org.web3j.crypto.ECKeyPair;
 
 import java.math.BigInteger;
@@ -59,13 +65,7 @@ public class EccOperations {
         return ecPoint.getEncoded(true);
     }
 
-    public ECKeyPair getKeyPair(byte[] privateKey) {
-        ECKeyPair ecKeyPair = null;
-        if(this.eccTypeEnums == EccTypeEnums.SECP256K1){
-            ecKeyPair = ECKeyPair.create(privateKey);
-        }else{
-            ecKeyPair = SM2KeyHandler.create(privateKey);
-        }
-        return ecKeyPair;
+    public CryptoKeyPair getKeyPair(byte[] privateKey) {
+        return KeyUtils.getCryptKeyPair(privateKey, this.eccTypeEnums);
     }
 }

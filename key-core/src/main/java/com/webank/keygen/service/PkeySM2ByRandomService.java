@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.digests.SHA512Digest;
 import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
 import org.bouncycastle.crypto.params.KeyParameter;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
 import org.web3j.crypto.ECKeyPair;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -51,10 +52,8 @@ public class PkeySM2ByRandomService implements PrivateKeyCreator{
      */
     @Override
     public PkeyInfo generatePrivateKey() throws KeyGenException {
-        
-        ECKeyPair ecKeyPair = SM2KeyHandler.generateSM2KeyPair();
-        byte[] chaincode = RandomUtils.randomBytes(32);
-        return KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(), EccTypeEnums.SM2P256V1.getEccName(), chaincode);
+        CryptoKeyPair keyPair = SM2KeyHandler.generateSM2KeyPair();
+        return PkeyInfo.fromCryptoKeypair(keyPair);
     }
 
     //Please refer to PkeyHDDeriveService
@@ -64,8 +63,8 @@ public class PkeySM2ByRandomService implements PrivateKeyCreator{
         gen.init(privateKey, chainCode.getBytes(UTF_8), SEED_ITERATIONS);
 
         byte[] seed = ((KeyParameter) gen.generateDerivedParameters(SEED_KEY_SIZE)).getKey();
-        ECKeyPair ecKeyPair = SM2KeyHandler.create((sha256(seed)));
-        return KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(), EccTypeEnums.SM2P256V1.getEccName());
+        CryptoKeyPair ecKeyPair = SM2KeyHandler.create((sha256(seed)));
+        return PkeyInfo.fromCryptoKeypair(ecKeyPair);
     }
 }
  

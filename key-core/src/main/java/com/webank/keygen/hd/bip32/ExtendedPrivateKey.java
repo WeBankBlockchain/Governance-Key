@@ -6,8 +6,10 @@ import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.model.PkeyInfo;
 import com.webank.keygen.model.PubKeyInfo;
 import com.webank.keygen.utils.ExtendedKeyUtil;
+import com.webank.keygen.utils.KeyPresenter;
 import com.webank.keygen.utils.KeyUtils;
 import com.webank.keysign.utils.Numeric;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
 import org.web3j.crypto.ECKeyPair;
 
 import java.math.BigInteger;
@@ -64,11 +66,10 @@ public class ExtendedPrivateKey implements ChildKeyDerivable<ExtendedPrivateKey>
             return deriveChild(childIdx + 1);
         }
 
-        byte[] ckey = Numeric.toBytesPadded(childKey, 32);
-        ECKeyPair ecKeyPair =this.eccOperations.getKeyPair(ckey);
+        byte[] ckey = KeyPresenter.asBytes(childKey, 32);
+        CryptoKeyPair ecKeyPair =this.eccOperations.getKeyPair(ckey);
 
-        PkeyInfo pkeyInfo =  KeyUtils.createPkeyInfo(ecKeyPair.getPrivateKey(), ecKeyPair.getPublicKey(),
-                this.eccTypeEnums.getEccName(), Ir);
+        PkeyInfo pkeyInfo = PkeyInfo.fromCryptoKeypair(ecKeyPair, Ir);
         return new ExtendedPrivateKey(pkeyInfo);
     }
 

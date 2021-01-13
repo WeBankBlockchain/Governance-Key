@@ -11,14 +11,4 @@ import org.web3j.crypto.ECKeyPair;
  */
 public class SM2KeyHandlerTest {
 
-    @Test
-    public void pubKeIs64Bytes() throws Exception{
-        ECKeyPair ecKeyPair = SM2KeyHandler.generateSM2KeyPair();
-        byte[] bytes = ecKeyPair.getPublicKey().toByteArray();
-        if(bytes.length == 65 ){
-            Assert.assertTrue(bytes[0] == 0);
-            return;
-        }
-        Assert.assertEquals(64, bytes.length);
-    }
 }

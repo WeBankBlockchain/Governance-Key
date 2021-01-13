@@ -1,6 +1,8 @@
 package com.webank.keygen.key.impl;
 
 import com.webank.keygen.encrypt.KeyStoreEncrypt;
+import com.webank.keygen.enums.EccTypeEnums;
+import com.webank.keygen.enums.KeyFileTypeEnums;
 import com.webank.keygen.key.KeyEncryptAlgorithm;
 import com.webank.keygen.model.DecryptResult;
 
@@ -12,12 +14,12 @@ public class KeystoreEncryptAlgorithm implements KeyEncryptAlgorithm{
 
 	@Override
 	public String encrypt(String password, byte[] privateKey, String address, String eccType) throws Exception {
-		return KeyStoreEncrypt.encryptPrivateKey(password, privateKey, address);
+		return KeyStoreEncrypt.encryptPrivateKey(password, privateKey, EccTypeEnums.getEccByName(eccType));
 	}
 
 	@Override
 	public DecryptResult decryptFully(String password, String encryptPrivateKey) throws Exception {
-		return KeyStoreEncrypt.decryptFully(password, encryptPrivateKey);
+		return KeyStoreEncrypt.decryptWithEccType(password, encryptPrivateKey);
 	}
 
 	@Override
@@ -32,7 +34,8 @@ public class KeystoreEncryptAlgorithm implements KeyEncryptAlgorithm{
 
 	@Override
 	public String exportKey(String encryptKey, String address, String destinationDirectory) throws Exception {
-		return KeyStoreEncrypt.storeEncryptPrivateKeyToFile(encryptKey, address, destinationDirectory);
+		String fileName = address + KeyFileTypeEnums.KEYSTORE_FILE.getKeyFilePostfix();
+		return KeyStoreEncrypt.storeEncryptPrivateKeyToFile(encryptKey, fileName, destinationDirectory);
 	}
 
 	@Override

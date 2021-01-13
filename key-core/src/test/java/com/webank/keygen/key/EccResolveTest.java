@@ -1,6 +1,7 @@
 package com.webank.keygen.key;
 
 import com.webank.keygen.encrypt.P12Encrypt;
+import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.key.impl.KeystoreEncryptAlgorithm;
 import com.webank.keygen.key.impl.P12EncryptAlgorithm;
 import com.webank.keygen.key.impl.PemEncryptAlgorithm;
@@ -34,7 +35,7 @@ public class EccResolveTest {
     @Test
     public void testP12() throws Exception{
         PkeyInfo key = new PkeyByRandomService().generatePrivateKey();
-        String p12 = P12Encrypt.encryptPrivateKey("123", key.getPrivateKey(), key.getEccName());
+        String p12 = P12Encrypt.encryptPrivateKey("123", key.getPrivateKey(), EccTypeEnums.getEccByName(key.getEccName()));
         String curve = new P12EncryptAlgorithm().decryptFully("123", p12).getEccType();
         //System.out.println(curve);
         Assert.assertEquals("secp256k1", curve);

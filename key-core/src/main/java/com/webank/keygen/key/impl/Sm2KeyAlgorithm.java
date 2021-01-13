@@ -1,7 +1,10 @@
 package com.webank.keygen.key.impl;
 
+import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.handler.SM2KeyHandler;
 import com.webank.keygen.key.KeyComputeAlgorithm;
+import com.webank.keygen.utils.KeyUtils;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
 import org.web3j.crypto.Keys;
 import org.web3j.utils.Numeric;
 
@@ -14,18 +17,15 @@ import org.web3j.utils.Numeric;
  *
  */
 public class Sm2KeyAlgorithm implements KeyComputeAlgorithm {
-	@Override
-	public String computeAddress(byte[] privateKey) {
-		byte[] pubkey = SM2KeyHandler.SM2PrivateKeyToPublicKey(privateKey);
-		String address = Keys.getAddress(Numeric.toBigInt(pubkey));
-        if(!address.contains("0x") && !address.contains("0X")) return "0x" + address;
-        return address;
-	}
+    @Override
+    public String computeAddress(byte[] privateKey) {
+        CryptoKeyPair cryptoKeyPair = KeyUtils.getCryptKeyPair(privateKey, EccTypeEnums.SM2P256V1);
+        return cryptoKeyPair.getAddress();
+    }
 
     @Override
     public String computePublicKey(byte[] privateKey) {
-        byte[] pubkey = SM2KeyHandler.SM2PrivateKeyToPublicKey(privateKey);
-        return Numeric.toHexString(pubkey);
+        CryptoKeyPair cryptoKeyPair = KeyUtils.getCryptKeyPair(privateKey, EccTypeEnums.SM2P256V1);
+        return cryptoKeyPair.getHexPublicKey();
     }
-
 }

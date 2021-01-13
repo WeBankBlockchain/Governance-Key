@@ -21,6 +21,7 @@ import com.webank.keygen.handler.ECKeyHandler;
 import com.webank.keygen.handler.SM2KeyHandler;
 import com.webank.keygen.model.DecryptResult;
 import com.webank.keygen.utils.FileOperationUtils;
+import com.webank.keygen.utils.KeyPresenter;
 import com.webank.keygen.utils.KeyUtils;
 import org.bouncycastle.asn1.ASN1Object;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
@@ -37,6 +38,7 @@ import org.bouncycastle.util.BigIntegers;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 import org.bouncycastle.util.io.pem.PemWriter;
+import org.fisco.bcos.sdk.crypto.keypair.CryptoKeyPair;
 import org.web3j.utils.Numeric;
 
 import java.io.*;
@@ -57,29 +59,21 @@ import java.security.spec.PKCS8EncodedKeySpec;
  *
  */
 public class PemEncrypt{
-	static {
-		if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
-			Security.addProvider(new BouncyCastleProvider());
-		}
-	}
-	
 	/**
 	 * Convert plain private key to PEM format and save to disk
 	 */
     public static String storePrivateKey(byte[] privateKey, EccTypeEnums eccTypeEnums,
-    		String address, String destinationDirectory) throws Exception{
-    	if(privateKey == null || privateKey.length != 32) {
-    		throw new IllegalArgumentException("privateKey");
-    	}
+    		String destinationDirectory) throws Exception{
+		CryptoKeyPair cryptoKeyPair = KeyUtils.getCryptKeyPair(privateKey, eccTypeEnums);
     	String encryptPkey = encryptPrivateKey(privateKey, eccTypeEnums);
-		return storePrivateKey(encryptPkey, address, destinationDirectory);
+    	String fileName = cryptoKeyPair.getAddress() + KeyFileTypeEnums.PEM_FILE;
+		return storePrivateKey(encryptPkey, fileName, destinationDirectory);
     }
 
 	public static String storePrivateKey(String encryptKey,
-										 String address, String destinationDirectory) throws Exception{
-		address = address.startsWith("0x")?address:"0x"+address;
+										 String fileName, String destinationDirectory) throws Exception{
 		String filePath = FileOperationUtils.generateFilePath(
-				address+ KeyFileTypeEnums.PEM_FILE.getKeyFilePostfix(),
+				fileName,
 				destinationDirectory);
 		FileOperationUtils.writeFile(filePath, encryptKey);
 		return filePath;
@@ -93,20 +87,14 @@ public class PemEncrypt{
      */
     public static String encryptPrivateKey(byte[] privateKey, EccTypeEnums eccTypeEnums) 
     		throws Exception {
-       	BigInteger key = Numeric.toBigInt(privateKey);
-       	BigInteger pubKey = null;
-       	if(eccTypeEnums == EccTypeEnums.SECP256K1){
-			pubKey = ECKeyHandler.create(privateKey).getPublicKey();
-		}
-       	else if (eccTypeEnums == EccTypeEnums.SM2P256V1){
-			pubKey = SM2KeyHandler.create(privateKey).getPublicKey();
-		}
+       	CryptoKeyPair cryptoKeyPair = KeyUtils.getCryptKeyPair(privateKey, eccTypeEnums);
+		BigInteger key = new BigInteger(1, Numeric.hexStringToByteArray(cryptoKeyPair.getHexPrivateKey()));
 
         //1. Encapsulate curve meta info and private key bytes in PKCS#8 format
     	ASN1ObjectIdentifier curveOid = ECUtil.getNamedCurveOid(eccTypeEnums.getEccName());
     	X962Parameters params = new X962Parameters(curveOid);
     	ECPrivateKey keyStructure = new ECPrivateKey(256, key,
-				new DERBitString(KeyUtils.get65BytePubKey(BigIntegers.asUnsignedByteArray(pubKey))),
+				new DERBitString(Numeric.hexStringToByteArray(cryptoKeyPair.getHexPublicKey())),
 				null);
     	PrivateKeyInfo privateKeyInfo = new PrivateKeyInfo(
     				new AlgorithmIdentifier(X9ObjectIdentifiers.id_ecPublicKey, params),

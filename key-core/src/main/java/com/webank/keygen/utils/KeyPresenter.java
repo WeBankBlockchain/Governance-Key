@@ -42,7 +42,8 @@ public class KeyPresenter {
      * @return byte[]
      */
     public static byte[] asBytes(String hexKey){
-        return Numeric.hexStringToByteArray(hexKey);
+        byte[] bytes = Numeric.hexStringToByteArray(hexKey);
+        return bytes;
     }
 
     /**
@@ -50,8 +51,8 @@ public class KeyPresenter {
      * @param bigIntegerKey BigInteger format key. Can be private key or public key
      * @return byte[]
      */
-    public static byte[] asBytes(BigInteger bigIntegerKey){
-        return BigIntegers.asUnsignedByteArray(bigIntegerKey);
+    public static byte[] asBytes(BigInteger bigIntegerKey, int len){
+        return BigIntegers.asUnsignedByteArray(len, bigIntegerKey);
     }
 
 

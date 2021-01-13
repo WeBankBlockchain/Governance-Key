@@ -2,6 +2,7 @@ package com.webank.keygen.key.impl;
 
 import com.webank.keygen.encrypt.PemEncrypt;
 import com.webank.keygen.enums.EccTypeEnums;
+import com.webank.keygen.enums.KeyFileTypeEnums;
 import com.webank.keygen.key.KeyEncryptAlgorithm;
 import com.webank.keygen.model.DecryptResult;
 
@@ -33,7 +34,8 @@ public class PemEncryptAlgorithm implements KeyEncryptAlgorithm {
 
     @Override
     public String exportKey(String encryptKey, String address, String destinationDirectory) throws Exception {
-        return PemEncrypt.storePrivateKey(encryptKey, address, destinationDirectory);
+        String fileName = address+ KeyFileTypeEnums.PEM_FILE.getKeyFilePostfix();
+        return PemEncrypt.storePrivateKey(encryptKey, fileName, destinationDirectory);
     }
 
     @Override
