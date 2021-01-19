@@ -36,21 +36,6 @@ import java.math.BigInteger;
 @Slf4j
 public class KeyUtilsTest {
 
-	/**
-	 * Test that even private key is small, it still get a small private key
-	 * @throws Exception
-	 */
-	@Test
-	public void test256bitEnsured() throws Exception {
-		String pkeyHex = "a";
-		byte[] privKeyBytes = Numeric.hexStringToByteArray(pkeyHex);
-		Assert.assertEquals(1, privKeyBytes.length);
-		BigInteger pkey = Numeric.toBigInt(privKeyBytes);
-		BigInteger pub = SM2KeyHandler.create(privKeyBytes).getPublicKey();
-		PkeyInfo pkeyInfo = KeyUtils.createPkeyInfo(pkey, pub, EccTypeEnums.SM2P256V1.getEccName());
-		Assert.assertEquals(32, pkeyInfo.getPrivateKey().length);
-	}	
-
 	@Test
 	public void test() throws Exception{
 		CryptoResult result = NativeInterface.sm2keyPair();

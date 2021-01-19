@@ -15,30 +15,53 @@
  */
 package com.webank.keygen.utils;
 
+import com.webank.keygen.enums.EccTypeEnums;
+import com.webank.keygen.exception.KeyGenException;
 import com.webank.keygen.handler.SM2KeyHandler;
+import com.webank.keygen.model.PkeyInfo;
+import com.webank.wedpr.crypto.CryptoResult;
+import com.webank.wedpr.crypto.NativeInterface;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
-import org.web3j.crypto.ECKeyPair;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 
 /**
- * @Description SM2KeyHandlerTest
+ * @Description KeyUtilsTest
  * @author yuzhichu
  * @date 2019-12-26 
  */
-public class SM2KeyHandlerTest {
-
+@Slf4j
+public class KeyUtilsTest {
 
 	@Test
-	public void testPublicKeyFromPrivatekKey() throws Exception{
-
-		ECKeyPair ecKeyPair = SM2KeyHandler.generateSM2KeyPair();
-		byte[] pkeyBytes = Numeric.toBytesPadded(ecKeyPair.getPrivateKey(),32);
-		BigInteger pubExpected = ecKeyPair.getPublicKey();
-		BigInteger pubActual = SM2KeyHandler.create(pkeyBytes).getPublicKey();
-		Assert.assertEquals(pubExpected, pubActual);
-
+	public void test() throws Exception{
+		CryptoResult result = NativeInterface.sm2keyPair();
+		if(result.getWedprErrorMessage() != null){
+			log.error("Failed to generate sm2 keypair: {}",result.getWedprErrorMessage());
+			throw new KeyGenException(result.getWedprErrorMessage());
+		}
+		byte[] bytes = Numeric.hexStringToByteArray(result.getPublicKey());
+		System.out.println(bytes.length);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
