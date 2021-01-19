@@ -4,6 +4,7 @@ import com.webank.keygen.hd.bip32.ExtendedPrivateKey;
 import com.webank.keygen.utils.ExtendedKeyUtil;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * @author aaronchu
@@ -32,6 +33,7 @@ final class ExtKeyIterator implements Iterator<ExtendedPrivateKey> {
 
     @Override
     public ExtendedPrivateKey next() {
+        if(!hasNext()) throw new NoSuchElementException();
         //Slash check
         char ch = pathString.charAt(charIndex++);
         if(ch != '/') throw new IllegalArgumentException("Illegal pathString "+pathString);

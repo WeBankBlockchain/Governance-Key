@@ -85,7 +85,7 @@ public final class Numeric {
 
     public static byte[] hexStringToByteArray(String input) {
         String cleanInput = cleanHexPrefix(input);
-
+        if(cleanInput == null) throw new NullPointerException();
         int len = cleanInput.length();
 
         if (len == 0) {
