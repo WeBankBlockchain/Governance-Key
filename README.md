@@ -1,8 +1,8 @@
-# WebankBlockchain-Gov-Key
+# WebankBlockchain-Governance-Key
 
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
-WeBankBlockchain-Gov-Key组件旨在让用户便捷、安全的使用私钥，包含椭圆曲线私钥的生成、使用、加解密保管等功能，覆盖私钥全生命周期，并支持国密标准。Gov-key包含key-core和key-mgr两个组件，key-core用于私钥的生成、加密、分片还原、常规密码学操作，适合个人级用户使用。key-mgr用于私钥保管，适合企业级用户使用。
+WeBankBlockchain-Governance-Key组件旨在让用户便捷、安全的使用私钥，包含椭圆曲线私钥的生成、使用、加解密保管等功能，覆盖私钥全生命周期，并支持国密标准。Gov-key包含key-core和key-mgr两个组件，key-core用于私钥的生成、加密、分片还原、常规密码学操作，适合个人级用户使用。key-mgr用于私钥保管，适合企业级用户使用。
 
 
 ## 关键特性
@@ -41,7 +41,7 @@ WeBankBlockchain-Gov-Key组件旨在让用户便捷、安全的使用私钥，�
 欢迎参与本项目的社区建设：
 - 如项目对您有帮助，欢迎点亮我们的小星星(点击项目上方Star按钮)。
 - 欢迎提交代码(Pull requests)。
-- [提问和提交BUG](https://github.com/WeBankBlockchain/WeBankBlockchain-Gov-Key/issues)。
+- [提问和提交BUG](https://github.com/WeBankBlockchain/WeBankBlockchain-Governance-Key/issues)。
 - 如果发现代码存在安全漏洞，请在[这里](https://security.webank.com)上报。
 
 ## License
