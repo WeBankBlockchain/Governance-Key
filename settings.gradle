@@ -1,4 +1,4 @@
-rootProject.name = 'Gov-Key'
+rootProject.name = 'Governance-Key'
 include 'key-core'
 include 'key-mgr'
 include 'key-core-web'
