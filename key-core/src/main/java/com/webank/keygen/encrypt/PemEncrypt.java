@@ -71,7 +71,7 @@ public class PemEncrypt{
     		String destinationDirectory) throws Exception{
 		CryptoKeyPair cryptoKeyPair = KeyUtils.getCryptKeyPair(privateKey, eccTypeEnums);
     	String encryptPkey = encryptPrivateKey(privateKey, eccTypeEnums);
-    	String fileName = cryptoKeyPair.getAddress() + KeyFileTypeEnums.PEM_FILE;
+    	String fileName = cryptoKeyPair.getAddress() + KeyFileTypeEnums.PEM_FILE.getKeyFilePostfix();
 		return storePrivateKey(encryptPkey, fileName, destinationDirectory);
     }
 
