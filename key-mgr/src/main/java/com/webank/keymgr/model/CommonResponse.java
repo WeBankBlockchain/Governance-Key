@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@SuppressWarnings("unchecked")
 public class CommonResponse<TBody> {
 
     private static final int SUCCESS_CODE = 0;
