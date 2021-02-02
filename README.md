@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
-WeBankBlockchain-Governance-Key组件旨在让用户便捷、安全的使用私钥，覆盖私钥颁发、托管、使用，覆盖私钥全生命周期，并支持国密标准。Gov-key包含key-core和key-mgr两个组件，key-core用于私钥的生成、加密、分片还原、常规密码学操作，适合个人级用户使用。key-mgr用于私钥保管，适合企业级用户使用。
+WeBankBlockchain-Governance-Key组件旨在让用户便捷、安全的使用私钥，覆盖私钥颁发、托管、使用，覆盖私钥全生命周期，并支持国密标准。Gov-key包含key-core和key-mgr两个组件，key-core用于私钥的生成、加密、分片还原、常规密码学操作。key-mgr用于私钥保管。
 
 
 ## 关键特性
@@ -26,8 +26,8 @@ WeBankBlockchain-Governance-Key组件旨在让用户便捷、安全的使用私�
 
 
 ## 文档
-- [**中文**](https://gov-doc.readthedocs.io/zh_CN/latest/docs/WeBankBlockchain-Gov-Key/index.html)
-- [**快速安装**](https://gov-doc.readthedocs.io/zh_CN/latest/docs/WeBankBlockchain-Gov-Key/corequickstart.html)
+- [**中文**](https://governance-doc.readthedocs.io/zh_CN/latest/docs/WeBankBlockchain-Governance-Key/index.html)
+- [**快速安装**](https://governance-doc.readthedocs.io/zh_CN/latest/docs/WeBankBlockchain-Governance-Key/corequickstart.html)
 
 
 ## 贡献代码
