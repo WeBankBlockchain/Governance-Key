@@ -35,6 +35,11 @@ public class NativeInterface {
     public static native CryptoResult sm2keyPair();
     public static native CryptoResult keccak256(String messageHex);
     public static native CryptoResult sm3(String messageHex);
+    public static native CryptoResult curve25519GenVRFProof(String privateKey, String vrfInput);
+    public static native CryptoResult curve25519VRFVerify(String vrfPublicKey, String vrfInput, String vrfProof);
+    public static native CryptoResult curve25519VRFGetPubKeyFromPrivateKey(String privateKey);
+    public static native CryptoResult curve25519VRFProofToHash(String vrfProof);
+    public static native CryptoResult curve25519IsValidVRFPubKey(String vrfPublicKey);
 
     private static String resolveLibTail(String os){
         os = os.toLowerCase();
