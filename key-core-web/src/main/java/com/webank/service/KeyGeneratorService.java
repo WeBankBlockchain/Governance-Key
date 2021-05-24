@@ -1,6 +1,7 @@
 package com.webank.service;
 
 import com.webank.handler.KeyGenAlgoSelectHandler;
+import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.enums.ExceptionCodeEnums;
 import com.webank.keygen.exception.KeyGenException;
 import com.webank.keygen.face.PrivateKeyCreator;
@@ -142,6 +143,13 @@ public class KeyGeneratorService {
     }
 
 
-
-
+    public R mnemonicExport(String mnemonic, String password, String eccType) throws Exception{
+        EccTypeEnums eccTypeEnums = EccTypeEnums.getEccByName(eccType);
+        PkeyInfo pkeyInfo = mnemonicService.generatePrivateKeyByMnemonic(mnemonic, password, eccTypeEnums);
+        PkeyInfoVO pkeyDetail = new PkeyInfoVO();
+        pkeyDetail.setPrivateKeyHex(KeyPresenter.asString(pkeyInfo.getPrivateKey()));
+        pkeyDetail.setPubKeyHex(KeyPresenter.asString(pkeyInfo.getPublicKey().getPublicKey()));
+        pkeyDetail.setAddress(pkeyInfo.getAddress());
+        return R.ok().put("data", pkeyDetail);
+    }
 }
