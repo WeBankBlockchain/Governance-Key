@@ -48,10 +48,12 @@ public class PkeyHDDeriveTest {
 
         ExtendedPrivateKey extPrivateKey = hdService.derivePath(pkeyInfo, "m/44'/2'/3'/4/5");
         PkeyInfo pkeyInfo1 = extPrivateKey.getPkeyInfo();
-        Assert.assertTrue(Objects.equals("1a365843abffad89104d9d07a7752f92908962efdf743ad6c60ef4e7ea5ea7e7", Numeric.toHexString(pkeyInfo1.getPrivateKey())));
-        Assert.assertTrue(Objects.equals("e3a4a7f8ed6cb8f8b9b17c42b5769ccc81edf52d8c72775b8dd1c21ed1a6708d", Numeric.toHexString(pkeyInfo1.getChainCode())));
         String address =  pkeyInfo1.getAddress();
-        Assert.assertTrue(KeyUtils.isAddressEquals("47f8a1d5c7f3732685e2a63201c5aa16ad05c13f",address));
+        String pkey1Str = Numeric.toHexString(pkeyInfo1.getPrivateKey());
+        String pkey1Cc = Numeric.toHexString(pkeyInfo1.getChainCode());
+        Assert.assertTrue(Objects.equals("cd2e0330c22f7d8d38e22ad8df4d15824a7ba0ef7150f4dd777bf036fde64eed", pkey1Str));
+        Assert.assertTrue(Objects.equals("74a8a2f58bb1e4c7502ab9ebf9aec90a062e08be8dadc9741d75902bb50aae4a", pkey1Cc));
+        Assert.assertTrue(KeyUtils.isAddressEquals("76bc156f9188b09d549117af9391ce9947d4f45b",address));
         Assert.assertTrue(Objects.equals("sm2p256v1", pkeyInfo1.getEccName()));
     }
 
@@ -62,11 +64,12 @@ public class PkeyHDDeriveTest {
 
         ExtendedPrivateKey extPrivateKey = hdService.derivePath(pkeyInfo, "m/44'/2'/3'/4/5");
         PkeyInfo pkeyInfo1 = extPrivateKey.getPkeyInfo();
-
-        Assert.assertTrue(Objects.equals("1a365843abffad89104d9d07a7752f92908962efdf743ad6c60ef4e7ea5ea7e7", Numeric.toHexString(pkeyInfo1.getPrivateKey())));
-        Assert.assertTrue(Objects.equals("e3a4a7f8ed6cb8f8b9b17c42b5769ccc81edf52d8c72775b8dd1c21ed1a6708d", Numeric.toHexString(pkeyInfo1.getChainCode())));
-        String address = pkeyInfo1.getAddress();
-        Assert.assertTrue(KeyUtils.isAddressEquals("47f8a1d5c7f3732685e2a63201c5aa16ad05c13f", address));
+        String address =  pkeyInfo1.getAddress();
+        String pkey1Str = Numeric.toHexString(pkeyInfo1.getPrivateKey());
+        String pkey1Cc = Numeric.toHexString(pkeyInfo1.getChainCode());
+        Assert.assertTrue(Objects.equals("cd2e0330c22f7d8d38e22ad8df4d15824a7ba0ef7150f4dd777bf036fde64eed",pkey1Str));
+        Assert.assertTrue(Objects.equals("74a8a2f58bb1e4c7502ab9ebf9aec90a062e08be8dadc9741d75902bb50aae4a", pkey1Cc));
+        Assert.assertTrue(KeyUtils.isAddressEquals("76bc156f9188b09d549117af9391ce9947d4f45b", address));
         Assert.assertTrue(Objects.equals("sm2p256v1", pkeyInfo1.getEccName()));
     }
 
@@ -77,11 +80,12 @@ public class PkeyHDDeriveTest {
 
         ExtendedPrivateKey extPrivateKey = hdService.deriveChild(pkeyInfo, 10);
         PkeyInfo pkeyInfo1 = extPrivateKey.getPkeyInfo();
-
-        Assert.assertTrue(Objects.equals("1a4f455cbec1608c948b3eee15a73e45ceb8fffe75b770df0beb5e83345cbf6a", Numeric.toHexString(pkeyInfo1.getPrivateKey())));
-        Assert.assertTrue(Objects.equals("ebe916ee66bac5af9ae2ed5d7d749d08b079ba5327fe8a9ba2fc1bdc10e1646c", Numeric.toHexString(pkeyInfo1.getChainCode())));
+        String pkey1Str = Numeric.toHexString(pkeyInfo1.getPrivateKey());
+        String pkey1Cc = Numeric.toHexString(pkeyInfo1.getChainCode());
         String addr = pkeyInfo1.getAddress();
-        Assert.assertTrue(KeyUtils.isAddressEquals("7e157c46c0a0fbe2d30b5db57dc60611d4427d44", addr));
+        Assert.assertTrue(Objects.equals("4d251a16d57a02cfff7dc256d012a7ddafc85b52fcbd67a9b2f1897ed2c55708",pkey1Str));
+        Assert.assertTrue(Objects.equals("982017c5d4cc0626050ced4f8f19b47885cca6bc2510a602277d7eaccb804d5d", pkey1Cc));
+        Assert.assertTrue(KeyUtils.isAddressEquals("e2014c6d8f68812c074df292b26d17a50de01040", addr));
         Assert.assertTrue(Objects.equals("sm2p256v1", pkeyInfo1.getEccName()));
     }
 
