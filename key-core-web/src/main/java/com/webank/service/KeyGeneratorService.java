@@ -85,10 +85,17 @@ public class KeyGeneratorService {
         //Convert
         String dataStr = this.selectHandler.selectKeyConvertor(encType).fromBytes(data);
         KeyEncryptAlgorithm algorithm = this.selectHandler.selectKeyEncryptor(encType);
-        byte[] rawkey = algorithm.decrypt(password, dataStr);
-        if(rawkey == null){
+        byte[] rawkey = null;
+        try{
+            rawkey = algorithm.decrypt(password, dataStr);
+            if(rawkey == null){
+                throw new RuntimeException();
+            }
+        }
+        catch (Exception ex){
             return R.error("请确保密码正确");
         }
+
         return R.ok().put("data", KeyPresenter.asString(rawkey));
     }
 
