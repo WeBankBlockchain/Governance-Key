@@ -18,6 +18,7 @@ public class MasterKeyGenerator {
 
 
     public byte[] toMasterKey(byte[] data) throws KeyGenException{
-        return this.toMasterKey(data, FISCOBCOS_Seed);
+        //To improve cross chain interroperation
+        return this.toMasterKey(data, Bitcoin_Seed);
     }
 }

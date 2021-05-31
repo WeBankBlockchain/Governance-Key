@@ -1,6 +1,7 @@
 package com.webank.service;
 
 import com.webank.handler.KeyGenAlgoSelectHandler;
+import com.webank.keygen.enums.EccTypeEnums;
 import com.webank.keygen.enums.ExceptionCodeEnums;
 import com.webank.keygen.exception.KeyGenException;
 import com.webank.keygen.face.PrivateKeyCreator;
@@ -84,10 +85,17 @@ public class KeyGeneratorService {
         //Convert
         String dataStr = this.selectHandler.selectKeyConvertor(encType).fromBytes(data);
         KeyEncryptAlgorithm algorithm = this.selectHandler.selectKeyEncryptor(encType);
-        byte[] rawkey = algorithm.decrypt(password, dataStr);
-        if(rawkey == null){
-            return R.error("请确保密码正确");
+        byte[] rawkey = null;
+        try{
+            rawkey = algorithm.decrypt(password, dataStr);
+            if(rawkey == null){
+                throw new RuntimeException();
+            }
         }
+        catch (Exception ex){
+                return R.error("请确保密码正确");
+        }
+
         return R.ok().put("data", KeyPresenter.asString(rawkey));
     }
 
@@ -109,7 +117,7 @@ public class KeyGeneratorService {
         return R.ok().put("data", pkeyDetail);
     }
 
-    public void transform(byte[] bytes, String inputFile, String password, String tgtFormat, HttpServletResponse response) throws Exception {
+    public Object transform(byte[] bytes, String inputFile, String password, String tgtFormat, HttpServletResponse response) throws Exception {
         //extract encrypt type from fileName
         int index = inputFile.lastIndexOf(".");
         if(index == -1){
@@ -119,7 +127,15 @@ public class KeyGeneratorService {
         KeyEncryptAlgorithm decAlgorithm = this.selectHandler.selectKeyEncryptor(encType);
         KeyBytesConverter converter = this.selectHandler.selectKeyConvertor(encType);
         //decrypt it
-        DecryptResult decryptResult = decAlgorithm.decryptFully(password, converter.fromBytes(bytes));
+        DecryptResult decryptResult = null;
+        try{
+            decryptResult = decAlgorithm.decryptFully(password, converter.fromBytes(bytes));
+            if(decryptResult  == null || decryptResult.getPrivateKey() == null) throw new RuntimeException();
+        }
+        catch (Exception ex){
+            return R.error("请确保密码正确");
+        }
+
         //encrypt to target format
         KeyEncryptAlgorithm encryptAlgorithm = this.selectHandler.selectKeyEncryptor(tgtFormat);
         byte[] pkey = decryptResult.getPrivateKey();
@@ -137,11 +153,17 @@ public class KeyGeneratorService {
         response.setHeader("Access-Control-Expose-Headers", "fname");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + outputFile+"\"");
         response.getOutputStream().write(tgtEncryptBytes);
-
-        return ;
+        return response ;
     }
 
 
-
-
+    public R mnemonicExport(String mnemonic, String password, String eccType) throws Exception{
+        EccTypeEnums eccTypeEnums = EccTypeEnums.getEccByName(eccType);
+        PkeyInfo pkeyInfo = mnemonicService.generatePrivateKeyByMnemonic(mnemonic, password, eccTypeEnums);
+        PkeyInfoVO pkeyDetail = new PkeyInfoVO();
+        pkeyDetail.setPrivateKeyHex(KeyPresenter.asString(pkeyInfo.getPrivateKey()));
+        pkeyDetail.setPubKeyHex(KeyPresenter.asString(pkeyInfo.getPublicKey().getPublicKey()));
+        pkeyDetail.setAddress(pkeyInfo.getAddress());
+        return R.ok().put("data", pkeyDetail);
+    }
 }
