@@ -22,6 +22,13 @@ public class KeyGeneratorController {
         return service.random(curve);
     }
 
+    @GetMapping("mnemonicExport")
+    public R mnemonic(@RequestParam("mnemonic") String mnemonic,
+                      @RequestParam("password") String password,
+                      @RequestParam("eccType") String eccType) throws Exception{
+        return service.mnemonicExport(mnemonic, password, eccType);
+    }
+
     @GetMapping("mnemonic")
     public R mnemonic(){
         return service.mnemonic();
