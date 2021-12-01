@@ -1,0 +1,122 @@
+
+apply plugin: 'maven'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'signing'
+archivesBaseName = 'key-mini-toolkit'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+repositories {
+    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+    mavenCentral()
+}
+group = 'com.webank'
+version = '1.0.3'
+
+dependencies {
+    compile('org.projectlombok:lombok:1.18.6')
+    annotationProcessor('org.projectlombok:lombok:1.18.6')
+
+    testCompile('org.projectlombok:lombok:1.18.6')
+    testAnnotationProcessor('org.projectlombok:lombok:1.18.6')
+}
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+            srcDir 'src/test/java'
+        }
+        resources  {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+artifacts {
+    archives jar
+}
+signing {
+    required { gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+jar {
+    destinationDir file('dist')
+    archiveName project.name + '.jar'
+
+    exclude '**/*.xml'
+    exclude '**/*.properties'
+    exclude '**/*.crt'
+    exclude '**/*.key'
+    exclude '**/*.secret'
+
+    doLast {
+        copy {
+            from configurations.runtime
+            into 'dist/lib'
+        }
+        copy {
+            from file('src/main/resources/')
+            into 'dist/conf'
+        }
+        copy {
+            from file('tools/')
+            into 'dist/tools/'
+        }
+    }
+}
+
+/*
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.project {
+                name project.name
+                packaging 'jar'
+                description 'WeBank java crypto core'
+                url 'https://github.com/WeBankBlockchain/Crypto-Java-Lib'
+
+				scm {
+					url 'https://github.com/WeBankBlockchain/Crypto-Java-Lib.git'
+					connection 'https://github.com/WeBankBlockchain/Crypto-Java-Lib.git'
+				}
+
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'aaron'
+                        name 'aaron'
+                        email 'aaronchu@webank.com'
+                    }
+                }
+            }
+        }
+    }
+}
+
+ */
+
+clean {
+    delete 'dist'
+    delete 'build'
+    delete 'bin'
+}
