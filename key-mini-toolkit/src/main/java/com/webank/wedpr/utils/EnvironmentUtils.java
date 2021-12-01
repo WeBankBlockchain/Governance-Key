@@ -13,7 +13,6 @@ public class EnvironmentUtils {
         }
         osName = osName.toLowerCase();
         String osArch = System.getProperty("os.arch").toLowerCase();
-        System.out.println("osArch:"+osArch);
         if (osName.contains("windows")) return ".dll";
         if (osName.contains("linux")) {
             if ("aarch64".equals(osArch)) {
