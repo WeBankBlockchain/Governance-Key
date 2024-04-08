@@ -89,4 +89,28 @@ public class PkeyHDDeriveTest {
         Assert.assertTrue(Objects.equals("sm2p256v1", pkeyInfo1.getEccName()));
     }
 
+    @Test
+    public void testDeriveChild2() throws Exception {
+        String mnemonic = "medal shed task apart range accident ride matrix fire citizen motion ridge";
+
+        PkeyInfo pkeyInfo2 = mnemonicService.generatePrivateKeyByMnemonic(mnemonic, "123", EccTypeEnums.SECP256K1);
+        ExtendedPrivateKey rootKey2 = hdService.buildExtendedPrivateKey(pkeyInfo2);
+        ExtendedPrivateKey subPrivKey2 = rootKey2.deriveChild(2);
+
+        PkeyInfo pkeyInfo3 = mnemonicService.generatePrivateKeyByMnemonic(mnemonic, "123", EccTypeEnums.SECP256K1);
+        ExtendedPrivateKey rootKey3 = hdService.buildExtendedPrivateKey(pkeyInfo3);
+        ExtendedPrivateKey subPrivKey3 = rootKey3.deriveChild(3);
+
+        Assert.assertFalse(Objects.deepEquals(subPrivKey2.getPkeyInfo().getPrivateKey(),subPrivKey3.getPkeyInfo().getPrivateKey()));
+        Assert.assertFalse(Objects.deepEquals(subPrivKey2.getPkeyInfo().getPublicKey(),subPrivKey3.getPkeyInfo().getPublicKey()));
+        Assert.assertFalse(Objects.deepEquals(subPrivKey2.getPkeyInfo().getAddress(),subPrivKey3.getPkeyInfo().getAddress()));
+
+        PkeyInfo pkeyInfo2_2 = mnemonicService.generatePrivateKeyByMnemonic(mnemonic, "123", EccTypeEnums.SECP256K1);
+        ExtendedPrivateKey rootKey2_2 = hdService.buildExtendedPrivateKey(pkeyInfo2_2);
+        ExtendedPrivateKey subPrivKey2_2 = rootKey2_2.deriveChild(2);
+
+        Assert.assertTrue(Objects.deepEquals(subPrivKey2.getPkeyInfo().getPrivateKey(),subPrivKey2_2.getPkeyInfo().getPrivateKey()));
+        Assert.assertTrue(Objects.deepEquals(subPrivKey2.getPkeyInfo().getPublicKey(),subPrivKey2_2.getPkeyInfo().getPublicKey()));
+        Assert.assertTrue(Objects.deepEquals(subPrivKey2.getPkeyInfo().getAddress(),subPrivKey2_2.getPkeyInfo().getAddress()));
+    }
 }
