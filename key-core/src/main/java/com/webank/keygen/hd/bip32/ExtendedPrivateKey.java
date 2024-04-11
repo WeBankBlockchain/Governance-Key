@@ -50,7 +50,11 @@ public class ExtendedPrivateKey implements ChildKeyDerivable<ExtendedPrivateKey>
             indexBuffer.position(1);
             indexBuffer.put(privKey.getPrivateKey());
         } else {
-            indexBuffer.put(this.eccOperations.compress(publicKey.getPublicKey()));
+            if (publicKey.getPublicKey().length == 64 ){
+                indexBuffer.put(this.eccOperations.withoutCompress(publicKey.getPublicKey()));
+            } else {
+                indexBuffer.put(this.eccOperations.compress(publicKey.getPublicKey()));
+            }
         }
         indexBuffer.putInt(childIdx);//Big endian!!!!
         //hash(cc, pub + childIdx)

@@ -14,6 +14,7 @@ import org.fisco.bcos.sdk.crypto.keypair.SM2KeyPair;
 import org.web3j.crypto.ECKeyPair;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 
 public class EccOperations {
 
@@ -21,9 +22,9 @@ public class EccOperations {
 
     private final X9ECParameters CURVE;
 
-    public EccOperations(EccTypeEnums eccTypeEnums){
+    public EccOperations(EccTypeEnums eccTypeEnums) {
         this.eccTypeEnums = eccTypeEnums;
-        this.CURVE =  CustomNamedCurves.getByName(eccTypeEnums.getEccName());
+        this.CURVE = CustomNamedCurves.getByName(eccTypeEnums.getEccName());
     }
 
 
@@ -44,12 +45,12 @@ public class EccOperations {
         return ki.compareTo(getN()) < 0 && ki.compareTo(BigInteger.ZERO) > 0;
     }
 
-    public byte[] pubkeyAdd(byte[] pub1, byte[] pub2, boolean verify, boolean compressed){
+    public byte[] pubkeyAdd(byte[] pub1, byte[] pub2, boolean verify, boolean compressed) {
         ECPoint point1 = CURVE.getCurve().decodePoint(pub1);
         ECPoint point2 = CURVE.getCurve().decodePoint(pub2);
 
         ECPoint sum = point1.add(point2);
-        if(verify && sum.isInfinity()){
+        if (verify && sum.isInfinity()) {
             return null;
         }
         return sum.getEncoded(compressed);
@@ -62,6 +63,16 @@ public class EccOperations {
 
     public byte[] compress(byte[] point) {
         ECPoint ecPoint = CURVE.getCurve().decodePoint(point);
+        return ecPoint.getEncoded(true);
+    }
+
+    public byte[] withoutCompress(byte[] point) {
+        // 提取x和y坐标
+        BigInteger x = new BigInteger(1, Arrays.copyOfRange(point, 0, 32));
+        BigInteger y = new BigInteger(1, Arrays.copyOfRange(point, 32, 64));
+
+        // 从坐标创建ECPoint对象
+        ECPoint ecPoint = CURVE.getCurve().createPoint(x, y);
         return ecPoint.getEncoded(true);
     }
 
