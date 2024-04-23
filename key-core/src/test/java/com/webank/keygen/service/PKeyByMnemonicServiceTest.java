@@ -90,7 +90,31 @@ public class PKeyByMnemonicServiceTest {
 		Assert.assertTrue(KeyUtils.isAddressEquals("6f4da6efc551de988ce3f65bd9d21e9471d6f0ee",address2));
 		Assert.assertTrue(Objects.equals("2579ab059f514514a04b0f941bd8c09b53b62cdbfa8cfdfa688869ce45fbd240", cc2));
 		Assert.assertTrue(Objects.equals("secp256k1", pkeyInfo2.getEccName()));
+	}
 
+	@Test
+	public void testGeneratePrivateKeyByMnemonic2() throws Exception {
+		String mnemonicStr = "common feel corn harvest dirt rapid potato verify enough sausage eye limb";
+		PkeyInfo pkeyInfo1 = service.generatePrivateKeyByMnemonic(mnemonicStr, "123456", EccTypeEnums.SM2P256V1);
+		PkeyInfo pkeyInfo2 = service.generatePrivateKeyByMnemonic(mnemonicStr, "123456", EccTypeEnums.SECP256K1);
+
+		String pkeyInfo1Str = Numeric.toHexString(pkeyInfo1.getPrivateKey());
+		String address1 = pkeyInfo1.getAddress();
+		String cc1 = Numeric.toHexString(pkeyInfo1.getChainCode());
+
+		Assert.assertTrue(Objects.equals("17370d3bb51ff24ef149e410dd9c07ba57bedeb509adbd4b21e07fbaa72a4301", pkeyInfo1Str));
+		Assert.assertTrue(KeyUtils.isAddressEquals("493286567e6b18601fca2acd1d1af3b695fc3994", address1));
+		Assert.assertTrue(Objects.equals("1f254a38fa868219824f68136727ee1fb2df638c31feabdba20de870ba484457", cc1));
+		Assert.assertTrue(Objects.equals("sm2p256v1", pkeyInfo1.getEccName()));
+
+		String pkeyInfo2Str = Numeric.toHexString(pkeyInfo2.getPrivateKey());
+		String address2 = pkeyInfo2.getAddress();
+		String cc2 = Numeric.toHexString(pkeyInfo2.getChainCode());
+
+		Assert.assertTrue(Objects.deepEquals("17370d3bb51ff24ef149e410dd9c07ba57bedeb509adbd4b21e07fbaa72a4301", pkeyInfo2Str));
+		Assert.assertTrue(KeyUtils.isAddressEquals("f80e95fb536ad12518737bc3dc1a7582ffe66768",address2));
+		Assert.assertTrue(Objects.deepEquals("1f254a38fa868219824f68136727ee1fb2df638c31feabdba20de870ba484457", cc2));
+		Assert.assertTrue(Objects.deepEquals("secp256k1", pkeyInfo2.getEccName()));
 	}
 }
 

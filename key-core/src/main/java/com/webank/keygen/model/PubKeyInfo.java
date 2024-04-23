@@ -25,7 +25,11 @@ public class PubKeyInfo implements Cloneable {
     public String getAddress(){
         EccTypeEnums eccTypeEnums = EccTypeEnums.getEccByName(eccName);
         CryptoKeyPair cryptoKeyPair = KeyUtils.getCryptKeyPair(eccTypeEnums);
-        return Numeric.toHexString(cryptoKeyPair.getAddress(Arrays.copyOfRange(publicKey,1,publicKey.length)));
+        if (Numeric.toHexString(publicKey).length() == CryptoKeyPair.PUBLIC_KEY_LENGTH_IN_HEX){
+            return Numeric.toHexString(cryptoKeyPair.getAddress(publicKey));
+        } else {
+            return Numeric.toHexString(cryptoKeyPair.getAddress(Arrays.copyOfRange(publicKey,1,publicKey.length)));
+        }
     }
 
     @Override
